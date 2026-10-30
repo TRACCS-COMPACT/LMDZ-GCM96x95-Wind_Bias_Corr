@@ -1,0 +1,22 @@
+%COMPILER            mpif90
+%CCOMPILER           mpicc  # xios
+%LINK                mpif90
+%FPP                 cpp
+%AR                  ar
+%ARFLAGS             rU
+%MAKE                make
+%FPP_FLAGS           -P -traditional
+%FPP_DEF             NC_DOUBLE FFT_MKL
+
+%BASE_FFLAGS         -ffree-line-length-0 -fdefault-real-8 -fallow-argument-mismatch -fimplicit-none -I$MKL_ROOT/include -I$MKL_ROOT/include/intel64/lp64 -fbacktrace -g -ffpe-trap=invalid,zero,overflow
+%PROD_FFLAGS         -O3 -march=native -fPIC
+%DEV_FFLAGS          -Wall -fbounds-check
+%DEBUG_FFLAGS        -g3 -Wall -fbounds-check -ffpe-trap=invalid,zero,overflow -O0 -fstack-protector-all -fbacktrace -finit-real=snan
+
+%MPI_FFLAGS          -fcray-pointer
+
+# /!\ LD must be written in Makefile syntax
+%BASE_LD             -Wl,-rpath=$(shell nf-config --prefix)/lib -L$MKL_ROOT/lib/intel64 -lmkl_intel_lp64 -lmkl_core -lmkl_sequential -lpthread -lm
+%MPI_LD              -L$OPENMPI_ROOT/lib -lmpi
+%OMP_LD              -fopenmp
+%OMP_FFLAGS          -fopenmp -fcray-pointer

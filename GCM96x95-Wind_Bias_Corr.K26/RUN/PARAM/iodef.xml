@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<!-- =========================================================================================================== -->
+<!-- iodef.xml : Configuration file for production of output files using XIOS                                    -->
+<!--             This file contains the context XIOS.                                                            -->
+<!--             The model components context will be add automatically by the comp.driver                       -->
+<!-- =========================================================================================================== -->
+
+<simulation>
+
+  <!-- =========================================================================================================== -->
+  <!-- XIOS context                                                                                                -->
+  <!-- =========================================================================================================== -->
+  <context id="xios">
+
+    <variable_definition>
+         <variable_group id="server">
+            <variable id="using_server2" type="bool">false</variable>
+            <variable id="ratio_server2" type="int">50</variable>
+         </variable_group>
+
+        <variable_group id="buffer">
+            <variable id="optimal_buffer_size" type="string">performance</variable>
+            <variable id="buffer_size_factor" type="double">1.0</variable>
+            <variable id="min_buffer_size" type="int">10000000</variable>
+         </variable_group>
+
+        <variable_group id="parameters" >
+          <variable id="using_server" type="bool">true</variable>
+          <variable id="info_level" type="int">1</variable>
+          <variable id="print_file" type="bool">false</variable>
+          <variable id="using_oasis" type="bool">true</variable>
+          <variable id="oasis_codes_id" type="string" >LMDZ</variable>
+        </variable_group>
+      <variable id="activate_non_distributed_transformation" type="bool">true</variable>
+      <variable id="recv_field_timeout" type="double">3000.0</variable>
+      <variable id="call_oasis_enddef" type="bool">true</variable>
+    </variable_definition>
+
+  </context>
+
+  <!-- =========================================================================================================== -->
+  <!-- COMPONENT CONTEXT : the model components context will be add automatically by the comp.driver               -->
+  
+</simulation>

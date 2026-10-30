@@ -1,0 +1,160 @@
+<field_group operation="instant" freq_offset="0ts" freq_op="3h">
+
+    <field_group id="fields_COSP_LIDAR_2D" grid_ref="grid_glo" freq_offset="0ts" freq_op="3h">
+<!-- CALIPSO 2D -->
+      <field id="cllcalipso"    long_name="CALIPSO Low-level Cloud Fraction"   unit="1"  detect_missing_value=".true." />
+      <field id="clhcalipso"    long_name="CALIPSO Hight-level Cloud Fraction"   unit="1"  detect_missing_value=".true." />
+      <field id="clmcalipso"    long_name="CALIPSO Mid-level Cloud Fraction"   unit="1"  detect_missing_value=".true." />
+      <field id="cltcalipso"    long_name="CALIPSO Total Cloud Fraction"   unit="1"  detect_missing_value=".true." />
+      <field id="cllcalipsoice"   long_name="CALIPSO Ice-Phase Low-level Cloud Fraction"   unit="1"  detect_missing_value=".true." />
+      <field id="clhcalipsoice"   long_name="CALIPSO Ice-Phase Hight-level Cloud Fraction"   unit="1"  detect_missing_value=".true." />
+      <field id="clmcalipsoice"   long_name="CALIPSO Ice-Phase Mid-level Cloud Fraction"   unit="1"  detect_missing_value=".true." />
+      <field id="cltcalipsoice"   long_name="CALIPSO Ice-Phase Total Cloud Fraction"   unit="1"  detect_missing_value=".true." />
+      <field id="cllcalipsoliq"   long_name="CALIPSO Liq-Phase Low-level Cloud Fraction"   unit="1"  detect_missing_value=".true." />
+      <field id="clhcalipsoliq"   long_name="CALIPSO Liq-Phase Hight-level Cloud Fraction"   unit="1"  detect_missing_value=".true." />
+      <field id="clmcalipsoliq"   long_name="CALIPSO Liq-Phase Mid-level Cloud Fraction"   unit="1"  detect_missing_value=".true." />
+      <field id="cltcalipsoliq"   long_name="CALIPSO Liq-Phase Total Cloud Fraction"   unit="1"  detect_missing_value=".true." />
+      <field id="cllcalipsoun"    long_name="CALIPSO Undefined-Phase Low-level Cloud Fraction"   unit="1"  detect_missing_value=".true." />
+      <field id="clhcalipsoun"    long_name="CALIPSO Undefined-Phase Hight-level Cloud Fraction"   unit="1"  detect_missing_value=".true." />
+      <field id="clmcalipsoun"    long_name="CALIPSO Undefined-Phase Mid-level Cloud Fraction"   unit="1"  detect_missing_value=".true." />
+      <field id="cltcalipsoun"    long_name="CALIPSO Undefined-Phase Total Cloud Fraction"   unit="1"  detect_missing_value=".true." />
+      <field id="clopaquecalipso"  long_name="CALIPSO Opaque Cloud Fraction"   unit="1"  detect_missing_value=".true." />
+      <field id="clthincalipso"    long_name="CALIPSO Thin Cloud Fraction"   unit="1"  detect_missing_value=".true." />
+      <field id="clzopaquecalipso" long_name="CALIPSO Altitude of opacity"   unit="m"  detect_missing_value=".true." />
+      <field id="clopaquetemp" long_name="CALIPSO Opaque Cloud Temperature"   unit="K"  detect_missing_value=".true." />
+      <field id="clthintemp" long_name="CALIPSO Thin Cloud Temperature"   unit="K"  detect_missing_value=".true." />
+      <field id="clzopaquetemp" long_name="CALIPSO Altitude of opacity Temperature"   unit="K"  detect_missing_value=".true." />
+      <field id="clopaquemeanz" long_name="CALIPSO Opaque Cloud Altitude"   unit="m"  detect_missing_value=".true." />
+      <field id="clthinmeanz" long_name="CALIPSO Thin Cloud Altitude"   unit="m"  detect_missing_value=".true." />
+      <field id="clthinemis" long_name="CALIPSO Thin Cloud Emissivity"   unit="1"  detect_missing_value=".true." />
+      <field id="clopaquemeanzse"  long_name="CALIPSO Opaque Cloud Altitude with respect to Surface Elevation"   unit="m"  detect_missing_value=".true." />
+      <field id="clthinmeanzse"    long_name="CALIPSO Thin Cloud Altitude with respect to Surface Elevation"   unit="m"  detect_missing_value=".true." />
+      <field id="clzopaquecalipsose" long_name="CALIPSO Altitude of opacity with respect to Surface Elevation"   unit="m"  detect_missing_value=".true." />
+<!-- GROUND LIDAR 532 nm 2D -->
+      <field id="cllgrLidar532"    long_name="GROUND LIDAR (532 nm) Low-level Cloud Fraction"   unit="1"  detect_missing_value=".true." />
+      <field id="clhgrLidar532"    long_name="GROUND LIDAR (532 nm) High-level Cloud Fraction"   unit="1"  detect_missing_value=".true." />
+      <field id="clmgrLidar532"    long_name="GROUND LIDAR (532 nm) Mid-level Cloud Fraction"   unit="1"  detect_missing_value=".true." />
+      <field id="cltgrLidar532"    long_name="GROUND LIDAR (532 nm) Total Cloud Fraction"   unit="1"  detect_missing_value=".true." />
+<!-- ATLID 2D -->
+      <field id="cllatlid"    long_name="ATLID Low-level Cloud Fraction"   unit="1"  detect_missing_value=".true." />
+      <field id="clhatlid"    long_name="ATLID High-level Cloud Fraction"   unit="1"  detect_missing_value=".true." />
+      <field id="clmatlid"    long_name="ATLID Mid-level Cloud Fraction"   unit="1"  detect_missing_value=".true." />
+      <field id="cltatlid"    long_name="ATLID Total Cloud Fraction"   unit="1"  detect_missing_value=".true." />
+    </field_group>
+
+    <field_group id="fields_COSP_LIDAR_3D_height" grid_ref="grid_glo_height" freq_offset="0ts" freq_op="3h">
+<!-- CALIPSO 3D -->
+      <field id="clcalipso"  long_name="CALIPSO Cloud Fraction (532 nm)" unit="1" detect_missing_value=".true." />
+      <field id="clcalipsoice"    long_name="CALIPSO Ice-Phase Cloud Fraction (532 nm)" unit="1" detect_missing_value=".true." />
+      <field id="clcalipsoliq"    long_name="CALIPSO Liq-Phase Cloud Fraction (532 nm)" unit="1" detect_missing_value=".true." />
+      <field id="clcalipsoun"    long_name="CALIPSO Undefined-Phase Cloud Fraction (532 nm)" unit="1" detect_missing_value=".true." />
+      <field id="clcalipsoopaque"  long_name="CALIPSO Opaque Cloud profile Fraction" unit="1" detect_missing_value=".true." />
+      <field id="clcalipsothin"    long_name="CALIPSO Thin Cloud profile Fraction" unit="1" detect_missing_value=".true." />
+      <field id="clcalipsozopaque" long_name="CALIPSO z_opaque Fraction" unit="1"  detect_missing_value=".true." />
+      <field id="clcalipsoopacity" long_name="CALIPSO opacity Fraction" unit="1" detect_missing_value=".true." />
+<!-- GROUND LIDAR 532 nm 3D -->
+      <field id="clgrLidar532"  long_name="GROUND LIDAR (532 nm) Cloud Fraction" unit="1" detect_missing_value=".true." />
+<!-- ATLID 3D -->
+      <field id="clatlid"  long_name="ATLID Cloud Fraction" unit="1" detect_missing_value=".true." />
+    </field_group>
+
+<!-- CALIPSO 3D TEMP -->
+    <field_group id="fields_COSP_CALIPSO_3D_temp" grid_ref="grid_glo_temp" freq_offset="0ts" freq_op="3h">
+      <field id="clcalipsotmp"    long_name="CALIPSO Cloud Fraction (532 nm)" unit="%"  detect_missing_value=".true." />
+      <field id="clcalipsotmpliq" long_name="CALIPSO Liq-Phase Cloud Fraction (532 nm)" unit="1" detect_missing_value=".true." />
+      <field id="clcalipsotmpice" long_name="CALIPSO Ice-Phase Cloud Fraction (532 nm)" unit="1" detect_missing_value=".true." />
+      <field id="clcalipsotmpun"  long_name="CALIPSO Undefined-Phase Total Cloud Fraction"   unit="1"  detect_missing_value=".true." />
+    </field_group>
+
+<!-- CALIPSO 4D -->
+      <field id="lidarBetaMol532" long_name="CALIPSO Molecular Backscatter (532 nm)" unit="m-1 sr-1" freq_offset="0ts" freq_op="3h" grid_ref="grid_glo_heightmlev" detect_missing_value=".true." />
+      <field id="cfadLidarsr532" long_name="CALIPSO Scattering Ratio CFAD (532 nm)" unit="1" freq_offset="0ts" freq_op="3h" grid_ref="grid4Dsrbin"  detect_missing_value=".true." />
+      <field id="atb532" long_name="CALIPSO Attenuated Total Backscatter (532 nm)" unit="1" freq_offset="0ts" freq_op="3h" grid_ref="grid4Dcol"  detect_missing_value=".true." />
+<!-- GROUND LIDAR 532 nm 4D -->
+      <field id="lidarBetaMol532gr" long_name="GROUND LIDAR Molecular Backscatter (532 nm)" unit="m-1 sr-1" freq_offset="0ts" freq_op="3h" grid_ref="grid_glo_heightmlev" detect_missing_value=".true." />
+      <field id="cfadLidarsr532gr" long_name="GROUND LIDAR Scattering Ratio CFAD (532 nm)" unit="1" freq_offset="0ts" freq_op="3h" grid_ref="grid4Dsrbin"  detect_missing_value=".true." />
+      <field id="atb532gr" long_name="GROUND LIDAR Attenuated Total Backscatter (532 nm)" unit="1" freq_offset="0ts" freq_op="3h" grid_ref="grid4Dcol"  detect_missing_value=".true." />
+<!-- ATLID 4D -->
+      <field id="lidarBetaMol355" long_name="ATLID Molecular Backscatter (355 nm)" unit="m-1 sr-1" freq_offset="0ts" freq_op="3h" grid_ref="grid_glo_heightmlev" detect_missing_value=".true." />
+      <field id="cfadLidarsr355" long_name="ATLID Scattering Ratio CFAD (355 nm)" unit="1" freq_offset="0ts" freq_op="3h" grid_ref="grid4Dsrbin"  detect_missing_value=".true." />
+      <field id="atb355" long_name="ATLID Attenuated Total Backscatter (355 nm)" unit="1" freq_offset="0ts" freq_op="3h" grid_ref="grid4Dcol"  detect_missing_value=".true." />
+
+<!-- PARASOL -->
+<!--    <field_group id="fields_COSP_PARASOL_3D_sza" grid_ref="grid_glo_sza" freq_offset="0ts" freq_op="3h"> -->
+     <field id="parasolGrid_refl" long_name="PARASOL Reflectance" unit="1" freq_offset="0ts" freq_op="3h" grid_ref="grid_glo_sza" detect_missing_value=".true." />
+      <field id="parasolPix_refl" long_name="PARASOL Subcolumn Reflectance" unit="1" freq_offset="0ts" freq_op="3h" grid_ref="grid4Dsza" detect_missing_value=".true." />
+<!--       <field id="Ncrefl"  long_name="Nb for PARASOL-like mono-directional reflectance" unit="1" detect_missing_value=".true." /> -->
+<!--     </field_group> -->
+
+    <field_group id="fields_COSP_CLOUDSAT_2D" grid_ref="grid_glo" freq_offset="0ts" freq_op="3h">
+<!-- CLOUDSAT ONLY -->
+      <field id="cloudsat_tcc" long_name="CLOUDSAT Total Cloud Fraction" unit="1"  detect_missing_value=".true." />
+      <field id="cloudsat_tcc2" long_name="CLOUDSAT Total Cloud Fraction (no 1km)" unit="1"  detect_missing_value=".true." />
+
+      <field id="ptradarflag0" long_name="CLOUDSAT precipitation occurence fraction flag 0 (No precipitation)" unit="1"  detect_missing_value=".true." />
+      <field id="ptradarflag1" long_name="CLOUDSAT precipitation occurence fraction flag 1 (Rain possible)" unit="1"  detect_missing_value=".true." />
+      <field id="ptradarflag2" long_name="CLOUDSAT precipitation occurence fraction flag 2 (Rain probable)" unit="1"  detect_missing_value=".true." />
+      <field id="ptradarflag3" long_name="CLOUDSAT precipitation occurence fraction flag 3 (Rain certain)" unit="1"  detect_missing_value=".true." />
+      <field id="ptradarflag4" long_name="CLOUDSAT precipitation occurence fraction flag 4 (Snow possible)" unit="1"  detect_missing_value=".true." />
+      <field id="ptradarflag5" long_name="CLOUDSAT precipitation occurence fraction flag 5 (Snow certain)" unit="1"  detect_missing_value=".true." />
+      <field id="ptradarflag6" long_name="CLOUDSAT precipitation occurence fraction flag 6 (Mixed-precipitation possible)" unit="1"  detect_missing_value=".true." />
+      <field id="ptradarflag7" long_name="CLOUDSAT precipitation occurence fraction flag 7 (Mixed-precipitation certain)" unit="1"  detect_missing_value=".true." />
+      <field id="ptradarflag8" long_name="CLOUDSAT precipitation occurence fraction flag 8 (Heavy rain)" unit="1"  detect_missing_value=".true." />
+      <field id="ptradarflag9" long_name="CLOUDSAT precipitation occurence fraction flag 9 (Default)" unit="1"  detect_missing_value=".true." />
+      <field id="radarpia" long_name="CLOUDSAT PIA" unit="1"  detect_missing_value=".true." />
+<!-- CLOUDSAT + CALIPSO -->
+      <field id="cltlidarradar" long_name="CALIPSO and CLOUDSAT Total Cloud Fraction" unit="1"  detect_missing_value=".true." />
+    </field_group>
+
+    <field_group id="fields_COSP_CLOUDSAT_3D" grid_ref="grid_glo_height" freq_offset="0ts" freq_op="3h">
+      <field id="clcalipso2"  long_name="CALIPSO Cloud Fraction Undetected by CloudSat" unit="1" detect_missing_value=".true." />
+    </field_group>
+
+      <field id="dbze94" long_name="CloudSat Radar Reflectivity" unit="1" freq_offset="0ts" freq_op="3h" grid_ref="grid4Dcol"  detect_missing_value=".true." />
+      <field id="cfadDbze94" long_name="CloudSat Radar Reflectivity CFAD" unit="1" freq_offset="0ts" freq_op="3h" grid_ref="grid4Ddbze"  detect_missing_value=".true." />
+<!-- ISCCP -->
+    <field_group id="fields_COSP_ISCCP_2D" grid_ref="grid_glo" freq_offset="0ts" freq_op="3h">
+<!--      <field id="sunlit" long_name="1 for day points, 0 for nightime" unit="1"  detect_missing_value=".true." /> -->
+      <field id="cltisccp" long_name="Total Cloud Fraction as Calculated by the ISCCP Simulator" unit="1"  detect_missing_value=".true." />
+      <field id="pctisccp" long_name="Mean Cloud Top Pressure as Calculated by the ISCCP Simulator" unit="Pa"  detect_missing_value=".true." />
+      <field id="tauisccp" long_name="Optical Depth as Calculated by the ISCCP Simulator" unit="1"  detect_missing_value=".true." />
+      <field id="albisccp" long_name="Mean Cloud Albedo as Calculated by the ISCCP Simulator" unit="1"  detect_missing_value=".true." />
+      <field id="meantbisccp" long_name="Mean all-sky 10.5 micron brightness temperature as calculated by the ISCCP Simulator" unit="K"  detect_missing_value=".true." />
+      <field id="meantbclrisccp" long_name="Mean clear-sky 10.5 micron brightness temperature as calculated by the ISCCP Simulator" unit="K"  detect_missing_value=".true." />
+    </field_group>
+    <field_group id="fields_COSP_ISCCP_3D" grid_ref="grid_glo_column" freq_offset="0ts" freq_op="3h">
+      <field id="boxtauisccp" long_name="Optical Depth in Each Column as Calculated by the ISCCP Simulator" unit="1" detect_missing_value=".true." />
+      <field id="boxptopisccp" long_name="Cloud Top Pressure in Each Column as Calculated by the ISCCP Simulator" unit="Pa" detect_missing_value=".true." />
+    </field_group>
+      <field id="clisccp" long_name="ISCCP joint-PDF of cloud top pressure and optical depth" unit="1" freq_offset="0ts" freq_op="3h" grid_ref="grid4Dtau"  detect_missing_value=".true." />
+<!-- MISR -->
+    <field_group id="fields_COSP_MISR" freq_offset="0ts" freq_op="3h">
+      <field id="misr_fq" long_name="MISR joint-PDF of cloud top pressure and optical depth" unit="1" grid_ref="grid4Dmisr"  detect_missing_value=".true." />
+      <field id="misr_meanztop" long_name="MISR Mean Cloud Top Height" unit="1" grid_ref="grid_glo"  detect_missing_value=".true." />
+      <field id="misr_cldarea" long_name="MISR cloud cover" unit="1" grid_ref="grid_glo"  detect_missing_value=".true." />
+    </field_group>
+<!-- MODIS -->
+    <field_group id="fields_COSP_MODIS" grid_ref="grid_glo" freq_offset="0ts"  freq_op="3h">
+      <field id="cllmodis" long_name="MODIS Low-level Cloud Fraction" unit="1"  detect_missing_value=".true." />
+      <field id="clmmodis" long_name="MODIS Mid-level Cloud Fraction" unit="1"  detect_missing_value=".true." />
+      <field id="clhmodis" long_name="MODIS High-level Cloud Fraction" unit="1"  detect_missing_value=".true." />
+      <field id="cltmodis" long_name="MODIS Total Cloud Fraction" unit="1"  detect_missing_value=".true." />
+      <field id="clwmodis" long_name="MODIS Cloud Fraction water mean" unit="1"  detect_missing_value=".true." />
+      <field id="climodis" long_name="MODIS Cloud Fraction ice mean" unit="1"  detect_missing_value=".true." />
+      <field id="tautmodis" long_name="MODIS Optical_Thickness_Total_Mean" unit="1"  detect_missing_value=".true." />
+      <field id="tauwmodis" long_name="MODIS Optical_Thickness_Water_Mean" unit="1"  detect_missing_value=".true." />
+      <field id="tauimodis" long_name="MODIS Optical_Thickness_Ice_Mean" unit="1"  detect_missing_value=".true." />
+      <field id="tautlogmodis" long_name="MODIS Optical_Thickness_Total_logMean" unit="1"  detect_missing_value=".true." />
+      <field id="tauwlogmodis" long_name="MODIS Optical_Thickness_Water_logMean" unit="1"  detect_missing_value=".true." />
+      <field id="tauilogmodis" long_name="MODIS Optical_Thickness_Ice_logMean" unit="1"  detect_missing_value=".true." />
+      <field id="reffclwmodis"  long_name="Modis Cloud_Particle_Size_Water_Mean" unit="m"  detect_missing_value=".true." />
+      <field id="reffclimodis"  long_name="Modis Cloud_Particle_Size_Ice_Mean" unit="m"  detect_missing_value=".true." />
+      <field id="pctmodis"  long_name="Modis Cloud_Top_Pressure_Total_Mean" unit="Pa"  detect_missing_value=".true." />
+      <field id="lwpmodis" long_name="Modis Liquid_Water_Path_Mean" unit="kg m-2"  detect_missing_value=".true." />
+      <field id="iwpmodis" long_name="Modis Ice_Water_Path_Mean" unit="kg m-2" detect_missing_value=".true." />
+    </field_group>
+      <field id="modis_ot_vs_ctp" long_name="MODIS joint-PDF of cloud top pressure and optical depth" unit="1" freq_offset="0ts" freq_op="3h" grid_ref="grid4Dtau"  detect_missing_value=".true." />
+      <field id="modis_ot_vs_reffice" long_name="MODIS Joint-PDF of optical-depth and ice particle size" unit="1" freq_offset="0ts" freq_op="3h" grid_ref="grid4Dreffi"  detect_missing_value=".true." />
+      <field id="modis_ot_vs_reffliq" long_name="MODIS Joint-PDF of optical-depth and liquid particle size" unit="1" freq_offset="0ts" freq_op="3h" grid_ref="grid4Dreffl"  detect_missing_value=".true." />
+
+    </field_group>

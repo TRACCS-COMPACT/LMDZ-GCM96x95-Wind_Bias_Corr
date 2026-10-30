@@ -1,0 +1,30 @@
+ok_guide=y
+guide_u= y
+guide_v= y
+guide_T= n
+guide_Q= n
+guide_P= n
+guide_teta= n
+
+guide_add= y
+guide_plevs=2
+
+guide_sav=n
+guide_BL=n
+
+guide_invertp=n
+guide_inverty=n
+convert_Pa=n
+
+guide_BL=n
+guide_Strato=n
+guide_SOM=n
+ndaySOM=10
+
+ini_anal=n
+tau_min_u=1.
+tau_max_u=1.
+tau_min_v=1.
+tau_max_v=1.
+tau_min_T=1.
+tau_max_T=1.

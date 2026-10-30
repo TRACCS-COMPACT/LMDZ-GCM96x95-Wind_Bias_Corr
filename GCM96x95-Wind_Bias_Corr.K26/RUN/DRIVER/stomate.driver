@@ -1,0 +1,114 @@
+#!/bin/ksh
+
+#D- Driver for ORCHIDEE stomate component (SBG)
+
+#-----------------------------------------------------------------
+function SBG_Initialize
+{
+    IGCM_debug_PushStack "SBG_Initialize"
+
+    IGCM_debug_PopStack "SBG_Initialize"
+}
+
+#-----------------------------------------------------------------
+function SBG_Update
+{
+    IGCM_debug_PushStack "SBG_Update"
+    
+    # Output management
+    # Modify file_def_orchidee.xml file using settings from stomate.card
+    # We here suppose that for each file, in stomate.card UserChoices section, if the parameter 
+    # output_level_filename is set, then also output_freq_filename must be set. The existance of output_freq_filename will not be checked. 
+    # If output_level_filename=NONE or if it is not set, the corresponding file will be deactivated.
+    
+    if [ X${stomate_UserChoices_output_level_stomate_history} = X ] || [ X${stomate_UserChoices_output_level_stomate_history} = XNONE ] ; then
+	# output_level_stomate_history is not set in stomate.card or it is set to NONE.
+	# Deactivate the file.
+	IGCM_comp_modifyXmlFile nonblocker file_def_orchidee.xml stomate1 enabled .FALSE.
+	IGCM_comp_modifyXmlFile nonblocker file_def_orchidee.xml stomate1 output_level 0
+	IGCM_comp_modifyXmlFile nonblocker file_def_orchidee.xml stomate1 output_freq 1mo
+    else
+	IGCM_comp_modifyXmlFile nonblocker file_def_orchidee.xml stomate1 enabled      .TRUE.
+	IGCM_comp_modifyXmlFile nonblocker file_def_orchidee.xml stomate1 output_level ${stomate_UserChoices_output_level_stomate_history}
+	IGCM_comp_modifyXmlFile nonblocker file_def_orchidee.xml stomate1 output_freq  ${stomate_UserChoices_output_freq_stomate_history}
+    fi
+    
+    if [ X${stomate_UserChoices_output_level_stomate_ipcc_history} = X ] || [ X${stomate_UserChoices_output_level_stomate_ipcc_history} = XNONE ] ; then
+	# output_level_stomate_ipcc_history is not set in stomate.card or it is set to NONE.
+	# Deactivate the file.
+	IGCM_comp_modifyXmlFile nonblocker file_def_orchidee.xml stomate2 enabled .FALSE.
+	IGCM_comp_modifyXmlFile nonblocker file_def_orchidee.xml stomate2 output_level 0
+	IGCM_comp_modifyXmlFile nonblocker file_def_orchidee.xml stomate2 output_freq 1mo
+    else
+	IGCM_comp_modifyXmlFile nonblocker file_def_orchidee.xml stomate2 enabled      .TRUE.
+	IGCM_comp_modifyXmlFile nonblocker file_def_orchidee.xml stomate2 output_level ${stomate_UserChoices_output_level_stomate_ipcc_history}
+	IGCM_comp_modifyXmlFile nonblocker file_def_orchidee.xml stomate2 output_freq  ${stomate_UserChoices_output_freq_stomate_ipcc_history}
+    fi
+
+        
+    if [ X${stomate_UserChoices_output_level_stomate_history_4dim} = X ] || [ X${stomate_UserChoices_output_level_stomate_history_4dim} = XNONE ] ; then
+	# output_level_stomate_history_4dim is not set in stomate.card or it is set to NONE.
+	# Deactivate the file.
+	IGCM_comp_modifyXmlFile nonblocker file_def_orchidee.xml stomate3 enabled .FALSE.
+	IGCM_comp_modifyXmlFile nonblocker file_def_orchidee.xml stomate3 output_level 0
+	IGCM_comp_modifyXmlFile nonblocker file_def_orchidee.xml stomate3 output_freq 1mo
+    else
+	IGCM_comp_modifyXmlFile nonblocker file_def_orchidee.xml stomate3 enabled      .TRUE.
+	IGCM_comp_modifyXmlFile nonblocker file_def_orchidee.xml stomate3 output_level ${stomate_UserChoices_output_level_stomate_history_4dim}
+	IGCM_comp_modifyXmlFile nonblocker file_def_orchidee.xml stomate3 output_freq  ${stomate_UserChoices_output_freq_stomate_history_4dim}
+    fi
+
+
+    if [ X${stomate_UserChoices_output_level_stomate_fixed_dia} = X ] || [ X${stomate_UserChoices_output_level_stomate_fixed_dia} = XNONE ] ; then
+        # output_level_stomate_fixed_dia is not set in stomate.card or it is set to NONE.
+        # Deactivate the file.
+        IGCM_comp_modifyXmlFile nonblocker file_def_orchidee.xml stomate4 enabled .FALSE.
+        IGCM_comp_modifyXmlFile nonblocker file_def_orchidee.xml stomate4 output_level 0
+        IGCM_comp_modifyXmlFile nonblocker file_def_orchidee.xml stomate4 output_freq 1mo
+    else
+        IGCM_comp_modifyXmlFile nonblocker file_def_orchidee.xml stomate4 enabled      .TRUE.
+        IGCM_comp_modifyXmlFile nonblocker file_def_orchidee.xml stomate4 output_level ${stomate_UserChoices_output_level_stomate_fixed_dia}
+        IGCM_comp_modifyXmlFile nonblocker file_def_orchidee.xml stomate4 output_freq  ${stomate_UserChoices_output_freq_stomate_fixed_dia}
+    fi
+
+
+    # Define in orchidee.def if restart file should be used
+    if ( [ ${CumulPeriod} -eq 1 ] && [ "${config_SBG_Restart}" = "n" ] ) ; then
+        echo "STOMATE : without restart"
+        IGCM_comp_modifyDefFile blocker orchidee.def STOMATE_RESTART_FILEIN NONE
+    else
+        IGCM_comp_modifyDefFile blocker orchidee.def STOMATE_RESTART_FILEIN stomate_rest_in.nc
+    fi
+
+
+    # Modify in orchidee.def NINPUT_UPDATE if it is set in stomate.card section UserChoices
+    # NINPUT_UPDATE inidcates if the nitrogen maps should be updated and at which frequency
+    if [ ! X${stomate_UserChoices_NINPUT_UPDATE} = X ] ; then
+        # Take the value from stomate.card
+        IGCM_comp_modifyDefFile nonblocker orchidee.def NINPUT_UPDATE   ${stomate_UserChoices_NINPUT_UPDATE}
+    else
+        # Set default value 0Y
+        IGCM_comp_modifyDefFile nonblocker orchidee.def NINPUT_UPDATE 0Y
+    fi
+
+    # Modify in orchidee.def STOMATE_IMPOSE_CN if it is set in stomate.card section UserChoices
+    # STOMATE_IMPOSE_CN inidcates if the nitrogen should be imposed or not. 
+    if [ ! X${stomate_UserChoices_STOMATE_IMPOSE_CN} = X ] ; then
+        # Take the value from stomate.card
+        IGCM_comp_modifyDefFile nonblocker orchidee.def STOMATE_IMPOSE_CN   ${stomate_UserChoices_STOMATE_IMPOSE_CN}
+    else
+        # Set default value n (nitrogen is not imposed)
+        IGCM_comp_modifyDefFile nonblocker orchidee.def STOMATE_IMPOSE_CN n
+    fi
+
+
+    IGCM_debug_PopStack "SBG_Update"
+}
+
+#-----------------------------------------------------------------
+function SBG_Finalize
+{
+    IGCM_debug_PushStack "SBG_Finalize"
+    
+    IGCM_debug_PopStack "SBG_Finalize"
+}

@@ -1,0 +1,220 @@
+#!/bin/ksh
+## Driver for the component SRF corresponding to the sechiba part of ORCHIDEE
+#-----------------------------------------------------------------
+function SRF_Initialize
+{
+    IGCM_debug_PushStack "SRF_Initialize"
+
+    ##- Define variable DefSuffix set in orchidee.card
+    ##  This variable is used in orchidee.card to choose
+    ##  parameter file(orchidee.def_DefSuffix).
+    if [ ! X${orchidee_UserChoices_DefSuffix} = X ] ; then
+        DefSuffix=${orchidee_UserChoices_DefSuffix}
+    else
+        DefSuffix=CWRR
+    fi
+
+    IGCM_debug_PopStack "SRF_Initialize"
+}
+
+#-----------------------------------------------------------------
+function SRF_Update
+{
+    IGCM_debug_PushStack "SRF_Update"
+
+    ## 1. Modifications in orchidee.def parameter file
+
+    # Activate STOMATE if the compontent SBG=stomate is set in config.card
+    if [ X${config_ListOfComponents_SBG} = Xstomate ] ; then
+	# Activate stomate in orchidee.def
+        IGCM_comp_modifyDefFile blocker orchidee.def STOMATE_OK_STOMATE y
+    else
+	# Deactivate stomate in orchidee.def
+        IGCM_comp_modifyDefFile blocker orchidee.def STOMATE_OK_STOMATE n
+	# Deactivate output files for stomate
+	IGCM_comp_modifyXmlFile nonblocker file_def_orchidee.xml stomate1 enabled .FALSE.
+	IGCM_comp_modifyXmlFile nonblocker file_def_orchidee.xml stomate1 output_level 0
+	IGCM_comp_modifyXmlFile nonblocker file_def_orchidee.xml stomate1 output_freq 1mo
+        IGCM_comp_modifyXmlFile nonblocker file_def_orchidee.xml stomate2 enabled .FALSE.
+	IGCM_comp_modifyXmlFile nonblocker file_def_orchidee.xml stomate2 output_level 0
+	IGCM_comp_modifyXmlFile nonblocker file_def_orchidee.xml stomate2 output_freq 1mo
+	IGCM_comp_modifyXmlFile nonblocker file_def_orchidee.xml stomate3 enabled .FALSE.
+	IGCM_comp_modifyXmlFile nonblocker file_def_orchidee.xml stomate3 output_level 0
+	IGCM_comp_modifyXmlFile nonblocker file_def_orchidee.xml stomate3 output_freq 1mo
+	IGCM_comp_modifyXmlFile nonblocker file_def_orchidee.xml stomate4 enabled .FALSE.
+	IGCM_comp_modifyXmlFile nonblocker file_def_orchidee.xml stomate4 output_level 0
+	IGCM_comp_modifyXmlFile nonblocker file_def_orchidee.xml stomate4 output_freq 1mo
+    fi
+
+    # Define in orchidee.def if restart file should be used
+    if ( [ ${CumulPeriod} -ne 1 ] || [ "${config_SRF_Restart}" != "n" ] ) ; then
+        IGCM_comp_modifyDefFile blocker orchidee.def SECHIBA_restart_in sechiba_rest_in.nc
+    else
+        IGCM_comp_modifyDefFile blocker orchidee.def SECHIBA_restart_in NONE
+    fi
+
+    # Set VEGET_UPDATE=1Y in orchidee.def if VEGET_UPDATE_at_start=y in orchidee.card and if it is the first cumul periond (start of new simulation)
+    if [ X${orchidee_UserChoices_VEGET_UPDATE_at_start} = Xy ] && [ ${CumulPeriod} -eq 1 ] ; then
+        IGCM_comp_modifyDefFile nonblocker orchidee.def VEGET_UPDATE   1Y
+    fi
+
+    # Modify in orchidee.def VEGET_UPDATE if it is set in orchidee.card section UserChoices
+    # Note: if the variable has been set by VEGET_UPDATE_at_start, this section will not overwrite it.
+    if [ ! X${orchidee_UserChoices_VEGET_UPDATE} = X ] ; then
+        IGCM_comp_modifyDefFile nonblocker orchidee.def VEGET_UPDATE   ${orchidee_UserChoices_VEGET_UPDATE}
+    else
+        IGCM_comp_modifyDefFile nonblocker orchidee.def VEGET_UPDATE 0Y
+    fi
+
+    # Set parameters related to ROUTING in orchidee.def
+    if [ X${orchidee_UserChoices_ROUTING} = X ] || [ X${orchidee_UserChoices_ROUTING} = Xstandard ]; then
+	# Nothing is set or ROUTING=standard in orchidee.def, default option
+        IGCM_comp_modifyDefFile nonblocker orchidee.def RIVER_ROUTING y
+        IGCM_comp_modifyDefFile nonblocker orchidee.def ROUTING_METHOD  standard
+    elif [ X${orchidee_UserChoices_ROUTING} = Xsimple ]; then
+	# ROUTING=simple is set in orchidee.card
+        IGCM_comp_modifyDefFile nonblocker orchidee.def RIVER_ROUTING y
+        IGCM_comp_modifyDefFile nonblocker orchidee.def ROUTING_METHOD  simple
+    elif [ X${orchidee_UserChoices_ROUTING} = Xhighres ]; then
+	# ROUTING=highres is set in orchidee.card
+        IGCM_comp_modifyDefFile nonblocker orchidee.def RIVER_ROUTING y
+        IGCM_comp_modifyDefFile nonblocker orchidee.def ROUTING_METHOD  highres
+    else
+	# ROUTING=off, routing will be deactivated
+	IGCM_comp_modifyDefFile nonblocker orchidee.def RIVER_ROUTING n
+        IGCM_comp_modifyDefFile nonblocker orchidee.def ROUTING_METHOD  standard
+    fi
+
+    # Set LAI_MAP in orchidee.def acording to value set in orchidee.card section UserChoices
+    # If LAI_MAP is not definded in orchidee.card, set default value n
+    # Note: this option is only read by ORCHIDEE if starting without restart files
+    if [ ! X${orchidee_UserChoices_LAI_MAP} = X ] ; then
+        IGCM_comp_modifyDefFile nonblocker orchidee.def LAI_MAP   ${orchidee_UserChoices_LAI_MAP}
+    else
+        IGCM_comp_modifyDefFile nonblocker orchidee.def LAI_MAP   DEFAULT
+    fi
+
+    # Set DO_WOOD_HARVEST in orchidee.def acording to value set in orchidee.card section UserChoices
+    # If DO_WOOD_HARVEST is not definded in orchidee.card, set default value y
+    if [ ! X${orchidee_UserChoices_DO_WOOD_HARVEST} = X ] ; then
+        IGCM_comp_modifyDefFile nonblocker orchidee.def DO_WOOD_HARVEST   ${orchidee_UserChoices_DO_WOOD_HARVEST}
+    else
+        IGCM_comp_modifyDefFile nonblocker orchidee.def DO_WOOD_HARVEST   DEFAULT
+    fi
+
+    # Activate creation of river description file only for the first period
+    if [ ${CumulPeriod} -eq 1 ] ; then
+        IGCM_comp_modifyDefFile nonblocker orchidee.def RIVER_DESC y
+    else
+        IGCM_comp_modifyDefFile nonblocker orchidee.def RIVER_DESC n
+    fi
+
+    # Activate calcul of chemistry BVOC
+    if [ ! X${orchidee_UserChoices_CHEMISTRY_BVOC} = X ] ; then
+        IGCM_comp_modifyDefFile nonblocker orchidee.def CHEMISTRY_BVOC ${orchidee_UserChoices_CHEMISTRY_BVOC}
+    else
+        IGCM_comp_modifyDefFile nonblocker orchidee.def CHEMISTRY_BVOC n
+    fi
+
+    ## 2. Mangement of output and modifications of related xml files
+    # Modify file_def_orchidee.xml file using settings from orchidee.card
+    # We here suppose that for each file, in orchidee.card UserChoices section, if the parameter 
+    # output_level_filename is set, then also output_freq_filename must be set. The existance of output_freq_filename will not be checked. 
+    # If output_level_filename=NONE or if it is not set, the corresponding file will be deactivated.
+    # Settings in config.card WriteFrequency are not used any more.
+    
+    if [ X${orchidee_UserChoices_output_level_sechiba_history} = X ] || [ X${orchidee_UserChoices_output_level_sechiba_history} = XNONE ] ; then
+	# output_level_sechiba_history is not set in orchidee.card or it is set to NONE.
+	# Deactivate the file.
+	IGCM_comp_modifyXmlFile nonblocker file_def_orchidee.xml sechiba1 enabled .FALSE.
+	IGCM_comp_modifyXmlFile nonblocker file_def_orchidee.xml sechiba1 output_level 0
+	IGCM_comp_modifyXmlFile nonblocker file_def_orchidee.xml sechiba1 output_freq 1mo
+    else
+	IGCM_comp_modifyXmlFile nonblocker file_def_orchidee.xml sechiba1 enabled      .TRUE.
+	IGCM_comp_modifyXmlFile nonblocker file_def_orchidee.xml sechiba1 output_level ${orchidee_UserChoices_output_level_sechiba_history}
+	IGCM_comp_modifyXmlFile nonblocker file_def_orchidee.xml sechiba1 output_freq  ${orchidee_UserChoices_output_freq_sechiba_history}
+    fi
+    
+    if [ X${orchidee_UserChoices_output_level_sechiba_out_2} = X ] || [ X${orchidee_UserChoices_output_level_sechiba_out_2} = XNONE ] ; then
+	# output_level_sechiba_out_2 is not set in orchidee.card or it is set to NONE.
+	# Deactivate the file.
+	IGCM_comp_modifyXmlFile nonblocker file_def_orchidee.xml sechiba2 enabled .FALSE.
+	IGCM_comp_modifyXmlFile nonblocker file_def_orchidee.xml sechiba2 output_level 0
+	IGCM_comp_modifyXmlFile nonblocker file_def_orchidee.xml sechiba2 output_freq 1mo
+    else
+	IGCM_comp_modifyXmlFile nonblocker file_def_orchidee.xml sechiba2 enabled      .TRUE.
+	IGCM_comp_modifyXmlFile nonblocker file_def_orchidee.xml sechiba2 output_level ${orchidee_UserChoices_output_level_sechiba_out_2}
+	IGCM_comp_modifyXmlFile nonblocker file_def_orchidee.xml sechiba2 output_freq  ${orchidee_UserChoices_output_freq_sechiba_out_2}
+    fi
+    
+    if [ X${orchidee_UserChoices_output_level_sechiba_history_4dim} = X ] || [ X${orchidee_UserChoices_output_level_sechiba_history_4dim} = XNONE ] ; then
+	# output_level_sechiba_history_4dim is not set in orchidee.card or it is set to NONE.
+	# Deactivate the file.
+	IGCM_comp_modifyXmlFile nonblocker file_def_orchidee.xml sechiba3 enabled .FALSE.
+	IGCM_comp_modifyXmlFile nonblocker file_def_orchidee.xml sechiba3 output_level 0
+	IGCM_comp_modifyXmlFile nonblocker file_def_orchidee.xml sechiba3 output_freq 1mo
+    else
+	IGCM_comp_modifyXmlFile nonblocker file_def_orchidee.xml sechiba3 enabled      .TRUE.
+	IGCM_comp_modifyXmlFile nonblocker file_def_orchidee.xml sechiba3 output_level ${orchidee_UserChoices_output_level_sechiba_history_4dim}
+	IGCM_comp_modifyXmlFile nonblocker file_def_orchidee.xml sechiba3 output_freq  ${orchidee_UserChoices_output_freq_sechiba_history_4dim}
+    fi
+        
+
+    # Add include of orchidee context in iodef.xml
+    # In iodef.xml add on the next line after "COMPONENT CONTEXT"
+    echo '<context id="orchidee" src="./context_orchidee.xml"/>' > add.tmp
+
+    # Add inclusion of file context_input_orchidee.xml if this file exists
+    if [ -f context_input_orchidee.xml ] ; then
+        echo '<context id="orchidee" src="./context_input_orchidee.xml"/>' >> add.tmp
+    fi
+
+    # Add inclusion of file context_routing_orchidee.xml if this file exists
+    if [ -f context_routing_orchidee.xml ] ; then
+        echo '<context id="orchidee" src="./context_routing_orchidee.xml"/>' >> add.tmp
+    fi
+
+    # Include xml files for output configuration if running with workflow CMIP6
+    if ( [ X"$( echo ${config_UserChoices_ExpType} | grep CMIP6 )" != "X" ] || [ X${config_Post_dr2xmlIPSL} = XTRUE ] ) ; then
+	  echo '<context id="orchidee" src="./ping_orchidee.xml"/>' >> add.tmp
+	  echo '<context id="orchidee" src="./dr2xml_orchidee.xml"/>' >> add.tmp
+    fi
+    cp iodef.xml iodef.xml.tmp
+    sed -e "/COMPONENT CONTEXT/r add.tmp" iodef.xml.tmp > iodef.xml
+    rm iodef.xml.tmp add.tmp
+
+    # Add LongName as global attribute in XIOS output files (if LongName is not empty)
+    if [ ! "X${config_UserChoices_LongName}" = "X" ] ; then
+	listfile=$(ls file_def*orchidee.xml)
+	echo "<variable id=\"LongName\" type=\"string\">${config_UserChoices_LongName}</variable>" > add.tmp
+	for file in ${listfile}
+	do
+	    cp ${file} ${file}.tmp
+	    sed -e "/<file id/r add.tmp" \
+		${file}.tmp > ${file}
+	    rm ${file}.tmp 
+	done 
+	rm add.tmp
+    fi
+
+    # Compression level (if CompressionLevel is not empty)
+    if [ ! "X${config_UserChoices_CompressionLevel}" = "X" ] ; then
+	echo "NetCDF output files compression level is " ${config_UserChoices_CompressionLevel}
+    	listfile=$(ls file_def*orchidee.xml)
+    	for file in ${listfile} ; do
+	    sed -i -e "s/\(compression_level=\"\)[^\"]*\(\"\)/\1${config_UserChoices_CompressionLevel}\2/" ${file}
+    	done
+    fi
+
+
+
+    IGCM_debug_PopStack "SRF_Update"
+}
+
+#-----------------------------------------------------------------
+function SRF_Finalize
+{
+    IGCM_debug_PushStack "SRF_Finalize"
+
+    IGCM_debug_PopStack "SRF_Finalize"
+}

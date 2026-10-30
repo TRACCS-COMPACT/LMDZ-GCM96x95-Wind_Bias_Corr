@@ -1,0 +1,79 @@
+[Compatibility]
+libIGCM=1.0
+
+[UserChoices]
+# The variable DefSuffix gives the suffix of the orchidee.def file to be used.
+# By default the file orchidee.def_CWRR will be selected.
+DefSuffix=CWRR
+
+VEGET_UPDATE=1Y
+
+
+# Specify output level for output files
+# Only the files sechiba_history.nc, sechiba_out_2.nc and sechiba_history_4dim.nc can be set here.
+# output_level_filename=0     : lowest level writing only variables needed for the monitoring
+# output_level_filename=12    : highest level which will output all variables
+# output_level_filename=NONE  : deactivate the file
+output_level_sechiba_history = 11
+output_level_sechiba_out_2 = NONE
+output_level_sechiba_history_4dim = 11
+
+# Specify output frequency for each file [1y, 1mo, 1d, 10800s, 1ts]
+# Settings using WriteFrequency in config.card is not longer used
+output_freq_sechiba_history = 1mo
+output_freq_sechiba_out_2 = 10800s
+output_freq_sechiba_history_4dim = 1mo
+
+
+[InitialStateFiles]
+List=	(${R_IN}/SRF/SOIL/soils_param.nc, .), \
+	(${R_IN}/SRF/SOIL/soil_bulk_and_ph.nc , .), \
+	(${R_IN}/SRF/reftemp.nc, . ), \
+	(${R_IN}/SRF/ROUTING/routing.nc, . ), \
+        (${R_IN}/SRF/albedo/alb_bg_modisopt_2D_ESA_v2.nc, alb_bg.nc ), \
+        (${R_IN}/SRF/cartepente2d_15min.nc, .)
+
+[BoundaryFiles]
+List= (${R_IN}/SRF/PFTMAPS/CMIP6/ESA-LUH2v2/scenarios/ssp245/PFTmap_${year}.nc, PFTmap.nc) ,\
+      (${R_IN}/SRF/WOODHARVEST/LUH2v2/scenarios/ssp245/woodharvest_${year}.nc, woodharvest.nc)
+ListNonDel= ()
+
+[SmoothFiles]
+List= ()
+
+[ParametersFiles]
+List=	(${SUBMIT_DIR}/PARAM/orchidee.def_${DefSuffix}, orchidee.def)   ,\
+	(${MODIPSL}/modeles/ORCHIDEE/src_xml/file_def_orchidee.xml, .)  ,\
+	(${MODIPSL}/modeles/ORCHIDEE/src_xml/context_input_orchidee.xml, .) ,\
+	(${MODIPSL}/modeles/ORCHIDEE/src_xml/context_orchidee.xml, .)   ,\
+	(${MODIPSL}/modeles/ORCHIDEE/src_xml/field_def_orchidee.xml, .)
+
+[RestartFiles]
+List=	(sechiba_rest_out.nc, sechiba_rest.nc, sechiba_rest_in.nc)
+
+[OutputText]
+List=   (out_orchidee*, orchidee.def, used_orchidee.def, iodef.xml, context_orchidee.xml, context_input_orchidee.xml, field_def_orchidee.xml, file_def_orchidee.xml, river_desc.nc)
+
+[OutputFiles]
+List=   (sechiba_history.nc,   ${R_OUT_SRF_O_M}/${PREFIX}_1M_sechiba_history.nc, Post_1M_sechiba_history), \
+        (sechiba_history_4dim.nc,${R_OUT_SRF_O_M}/${PREFIX}_1M_sechiba_history_4dim.nc, NONE), \
+        (sechiba_out_2.nc,     ${R_OUT_SRF_O_H}/${PREFIX}_HF_sechiba_out_2.nc,   NONE)
+
+[Post_1M_sechiba_history]
+Patches = ()
+GatherWithInternal = (lon, lat, time_counter, Areas, Contfrac, time_centered, time_centered_bounds)
+TimeSeriesVars2D = (nobiofrac, alb_nir, alb_vis, evap, fluxlat, fluxsens, netrad, qair, rain, runoff, snow, snownobio, snowf, frac_snow, subli, tair, temp_sol, tsol_max, tsol_min, drainage,mrsos, mrso, mrros, mrro, prveg, evspsblveg, evspsblsoi, tran, treeFrac, grassFrac, cropFrac, baresoilFrac, residualFrac, TWBR, riverflow, coastalflow, DelSoilMoist_daily, DelIntercept_daily, DelSWE_daily, delstock_routing_daily, snowmelt, LAImean, transpir, evapnu)
+ChunckJob2D = NONE
+TimeSeriesVars3D = (lai, maxvegetfrac, vegetfrac, ptn, nee)
+ChunckJob3D = NONE
+Seasonal = ON
+
+[Post_HF_sechiba_out_2]
+Patches = ()
+GatherWithInternal = (lon, lat, time_counter, Areas, Contfrac, time_centered, time_centered_bounds)
+TimeSeriesVars2D = (mrsos, mrro)
+ChunckJob2D = 50Y
+TimeSeriesVars3D = (ptn)
+ChunckJob3D = 10Y
+Seasonal = OFF
+

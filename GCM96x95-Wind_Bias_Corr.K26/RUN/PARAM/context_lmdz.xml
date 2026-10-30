@@ -1,0 +1,332 @@
+<!-- $Id$ -->
+<!-- Context LMDZ -->
+<context id="LMDZ">
+<!--  <calendar type="D360" start_date="1980-01-01 00:00:00" /> -->
+
+  <!-- Define available variables -->
+  <field_definition src="./field_def_lmdz.xml"/>
+
+  <!-- Define output files
+              Each file contains the list of variables and their output levels -->
+
+  <file_definition src="./file_def_histday_lmdz.xml"/>
+  <file_definition src="./file_def_histhf_lmdz.xml"/>
+  <file_definition src="./file_def_histins_lmdz.xml"/>
+  <file_definition src="./file_def_histLES_lmdz.xml"/>
+  <file_definition src="./file_def_histmth_lmdz.xml"/>
+  <file_definition src="./file_def_histstn_lmdz.xml"/>
+  <file_definition src="./file_def_histmthNMC_lmdz.xml"/>
+  <file_definition src="./file_def_histdayNMC_lmdz.xml"/>
+  <file_definition src="./file_def_histhfNMC_lmdz.xml"/>
+  <file_definition src="./file_def_histmthCOSP_lmdz.xml"/>
+  <file_definition src="./file_def_histdayCOSP_lmdz.xml"/>
+  <file_definition src="./file_def_histhfCOSP_lmdz.xml"/>
+  <!-- <file_definition src="./file_def_histmthECRAD2app_lmdz.xml"/> -->
+  <!-- <file_definition src="./file_def_histhfECRAD2app_lmdz.xml"/> -->
+  <!-- <file_definition src="./file_def_histdayECRAD2app_lmdz.xml"/> -->
+  <!-- <file_definition src="./file_def_histmthCOSPv2_lmdz.xml"/> -->
+  <!-- <file_definition src="./file_def_histdayCOSPv2_lmdz.xml"/> -->
+  <!-- <file_definition src="./file_def_histhfCOSPv2_lmdz.xml"/> -->
+  <file_definition src="./file_def_histstrataer_lmdz.xml"/>
+  <file_definition src="./file_def_histdaystrataer_lmdz.xml"/>
+<!--  <file_definition src="./file_def_phystoke_lmdz.xml"/>-->
+
+  <!-- Define domains and groups of domains -->
+  <domain_definition>
+
+    <domain id="dom_glo"  data_dim="1" />
+
+    <domain id="greordered"  domain_ref="dom_glo">
+      <reorder_domain invert_lat="true" shift_lon_fraction="0.5" min_lon="0" max_lon="360" />
+    </domain> 
+   
+    <domain id="dom_regular" ni_glo="144" nj_glo="143" type="rectilinear"  >
+      <generate_rectilinear_domain lat_start="-90" lat_end="90" lon_start="0"/>
+      <interpolate_domain order="1"/>
+    </domain>
+   
+    <domain id="dom_out" domain_ref="dom_glo"/>
+    
+  </domain_definition>
+  
+  <!-- Need to define a grid? Do it here -->
+<!--  <grid_definition>
+    <grid_group id="vertical" axis_ref="presnivs" />
+  </grid_> -->
+
+<!-- Define Scalar grid for GHG, orbital parameters and solar constants -->
+  <grid_definition>
+    <grid id="grid_scalar" >
+      <scalar/>
+    </grid>
+  </grid_definition>
+ 
+  <!-- Define groups of vertical axes -->
+  <axis_definition>
+    <axis id="time_month" n_glo="12" value="(0,11) [1 2 3 4 5 6 7 8 9 10 11 12]"/>
+    <axis id="time_year" unit="day" />
+    <axis id="presnivs" standard_name="Vertical levels" unit="Pa"/>
+    <axis id="presinter" standard_name="Pressure at interface of vertical levels" unit="Pa"/>
+    <axis id="Ahyb" standard_name="Ahyb comp of Hyb Cord" unit="Pa"/>
+    <axis id="Bhyb" standard_name="Bhyb comp of Hyb Cord" unit=""/>
+    <axis id="Ahyb_inter" standard_name="A comp of Hyb Cord at interface" unit="Pa"/>
+    <axis id="Bhyb_inter" standard_name="B comp of Hyb Cord at interface" unit=""/>
+    <axis id="Alt" standard_name="Height approx for scale heigh of 8km at levels" unit="km"/>
+    <axis id="plev" standard_name="model_level_number" unit="Pa"/>
+    <axis id="klev"  prec="8" long_name="number of layers" standard_name="number of layers" unit="1" />
+    <axis id="klevp1"  prec="8" long_name="number of layer interfaces" standard_name="number of layer interfaces" unit="1" />
+    <axis id="bnds" standard_name="bounds" unit="1" />
+    <axis id="spectband" standard_name="Sensor Band Central Radiation Wavenumber" unit="m-1"/>
+    <axis id="axis_lat" standard_name="Latitude axis">
+        <reduce_domain operation="average" direction="iDir" />
+    </axis>
+    <axis id="axis_lat_greordered" standard_name="Latitude axis">
+      <reduce_domain operation="average" direction="iDir" />
+    </axis>
+
+<!-- Cosp axis definitions-->
+    <axis id="height" standard_name="Cosp levels" unit="m"/> 
+    <axis id="height_mlev" standard_name="height_mlev" unit="m"/> 
+    <axis id="sza" standard_name="solar_zenith_angle" unit="degrees"/>
+    <axis id="pressure2" standard_name="pressure" unit="mb"/>
+    <axis id="column" standard_name="column" unit="count"/> 
+    <axis id="temp" standard_name="temperature" unit="K"/> 
+<!--    <axis id="cth16" standard_name="altitude" unit="m"/>   ym unused now to be in adequation with axis definition from model --> 
+    <axis id="cth" standard_name="altitude" unit="m"/> 
+    <axis id="ReffIce" standard_name="ReffIce" unit="microne" />
+    <axis id="ReffLiq" standard_name="ReffLiq" unit="microne" />
+    <axis id="scatratio" standard_name="scatratio" unit="1" />
+    <axis id="dbze" standard_name="dbze" unit="dBZ" />
+    <axis id="tau" standard_name="tau" unit="1" />
+  </axis_definition>
+
+  <grid_definition>
+
+    <grid id="klev_bnds"> <axis axis_ref="klev" /> <axis axis_ref="bnds" /> </grid>
+    <grid id="klevp1_bnds"> <axis axis_ref="klevp1" /> <axis axis_ref="bnds" /> </grid>
+
+     <grid id="grid_glo">
+        <domain domain_ref="dom_glo" />
+     </grid>
+     <grid id="grid_out">
+        <domain domain_ref="dom_out" />
+     </grid>
+
+     <grid id="grid_glo_presnivs">
+        <domain domain_ref="dom_glo" />
+        <axis axis_ref="presnivs" />
+     </grid>
+     <grid id="grid_out_presnivs">
+        <domain domain_ref="dom_out" />
+        <axis axis_ref="presnivs" />
+     </grid>
+
+     <grid id="grid_glo_plev">
+        <domain domain_ref="dom_glo" />
+        <axis axis_ref="plev" />
+     </grid>
+
+     <grid id="grid_glo_presinter">
+        <domain domain_ref="dom_glo" />
+        <axis axis_ref="presinter" />
+     </grid>
+     <grid id="grid_out_presinter">
+        <domain domain_ref="dom_out" />
+        <axis axis_ref="presinter" />
+     </grid>
+
+     <grid id="grid_out_plev17">
+        <domain id="dom_out" />
+          <axis long_name="pressure" n_glo="17" name="plev_std" positive="down" standard_name="air_pressure" unit="Pa" value="(0,16)[ 100000. 92500. 85000. 70000. 60000. 50000. 40000. 30000. 25000. 20000. 15000. 10000. 7000. 5000. 3000. 2000. 1000. ]"><interpolate_axis coordinate="pres" order="1" type="polynomial" />
+        </axis>
+     </grid>
+
+     <grid id="grid_out_plev37">
+        <domain id="dom_out" />
+          <axis long_name="pressure" n_glo="37" name="plev_std37" positive="down" standard_name="air_pressure" unit="Pa" value="(0,36)[ 100000. 97500. 95000. 92500. 90000. 87500. 85000. 82500. 80000. 77500. 75000. 70000. 65000. 60000. 55000. 50000. 45000. 40000. 35000. 30000. 25000. 22500. 20000. 17500. 15000. 12500. 10000. 7000. 5000. 3000. 2000. 1000. 700. 500. 300. 200. 100. ]"><interpolate_axis coordinate="pres" order="1" type="polynomial" />
+        </axis>
+     </grid>
+
+     <grid id="grid_out_plev">
+        <domain domain_ref="dom_out" />
+        <axis axis_ref="plev" />
+     </grid>
+
+     <grid id="grid_glo_spectband">
+        <domain domain_ref="dom_glo" />
+        <axis axis_ref="spectband" />
+     </grid>
+     <grid id="grid_out_spectband">
+        <domain domain_ref="dom_out" />
+        <axis axis_ref="spectband" />
+     </grid>
+
+     <grid id="grid_glo_height">
+        <domain domain_ref="dom_glo" />
+        <axis axis_ref="height" />
+     </grid>
+     <grid id="grid_out_height">
+        <domain domain_ref="dom_out" />
+        <axis axis_ref="height" />
+     </grid>
+
+     <grid id="grid_glo_heightmlev">
+        <domain domain_ref="dom_glo" />
+        <axis axis_ref="height_mlev" />
+     </grid>
+     <grid id="grid_out_heightmlev">
+        <domain domain_ref="dom_out" />
+        <axis axis_ref="height_mlev" />
+     </grid>
+
+     <grid id="grid_glo_temp">
+        <domain domain_ref="dom_glo" />
+        <axis axis_ref="temp" />
+     </grid>
+     <grid id="grid_out_temp">
+        <domain domain_ref="dom_out" />
+        <axis axis_ref="temp" />
+     </grid>
+
+     <grid id="grid_glo_sza">
+        <domain domain_ref="dom_glo" />
+        <axis axis_ref="sza" />
+     </grid>
+     <grid id="grid_out_sza">
+        <domain domain_ref="dom_out" />
+        <axis axis_ref="sza" />
+     </grid>
+
+     <grid id="grid_glo_column">
+        <domain domain_ref="dom_glo" />
+        <axis axis_ref="column" />
+     </grid>
+     <grid id="grid_out_column">
+        <domain domain_ref="dom_out" />
+        <axis axis_ref="column" />
+     </grid>
+
+<!-- Define 4D grids for Cosp simulator -->
+     <grid id="grid4Dcol">
+        <domain domain_ref="dom_glo" />
+        <axis axis_ref="column" />
+        <axis axis_ref="height_mlev" />
+     </grid>
+     <grid id="grid4Dcol_out">
+        <domain domain_ref="dom_out" />
+        <axis axis_ref="column" />
+        <axis axis_ref="height_mlev" />
+     </grid>
+
+     <grid id="grid4Dsrbin">
+        <domain domain_ref="dom_glo" />
+        <axis axis_ref="height" />
+        <axis axis_ref="scatratio" />
+     </grid>
+     <grid id="grid4Dsrbin_out">
+        <domain domain_ref="dom_out" />
+        <axis axis_ref="height" />
+        <axis axis_ref="scatratio" />
+     </grid>
+
+     <grid id="grid4Ddbze">
+        <domain domain_ref="dom_glo" />
+        <axis axis_ref="height" />
+        <axis axis_ref="dbze" />
+     </grid>
+     <grid id="grid4Ddbze_out">
+        <domain domain_ref="dom_out" />
+        <axis axis_ref="height" />
+        <axis axis_ref="dbze" />
+     </grid>
+
+     <grid id="grid4Dtau">
+        <domain domain_ref="dom_glo" />
+        <axis axis_ref="tau" />
+        <axis axis_ref="pressure2" />
+     </grid>
+     <grid id="grid4Dtau_out">
+        <domain domain_ref="dom_out" />
+        <axis axis_ref="tau" />
+        <axis axis_ref="pressure2" />
+     </grid>
+
+     <grid id="grid4Dmisr">
+        <domain domain_ref="dom_glo" />
+        <axis axis_ref="cth" />
+        <axis axis_ref="tau" />
+     </grid>
+     <grid id="grid4Dmisr_out">
+        <domain domain_ref="dom_out" />
+        <axis axis_ref="cth" />
+        <axis axis_ref="tau" />
+     </grid>
+
+     <grid id="grid4Dreffi">
+        <domain domain_ref="dom_glo" />
+        <axis axis_ref="tau" />
+        <axis axis_ref="ReffIce" />
+     </grid>
+     <grid id="grid4Dreffi_out">
+        <domain domain_ref="dom_out" />
+        <axis axis_ref="tau" />
+        <axis axis_ref="ReffIce" />
+     </grid>
+
+     <grid id="grid4Dreffl">
+        <domain domain_ref="dom_glo" />
+        <axis axis_ref="tau" />
+        <axis axis_ref="ReffLiq" />
+     </grid>
+     <grid id="grid4Dreffl_out">
+        <domain domain_ref="dom_out" />
+        <axis axis_ref="tau" />
+        <axis axis_ref="ReffLiq" />
+     </grid>
+
+     <grid id="grid4Dcol2">
+        <domain domain_ref="dom_glo" />
+        <axis axis_ref="height" />
+        <axis axis_ref="column" />
+     </grid>
+     <grid id="grid4Dcol2_out">
+        <domain domain_ref="dom_out" />
+        <axis axis_ref="height" />
+        <axis axis_ref="column" />
+     </grid>
+
+     <grid id="grid4Dsza">
+        <domain domain_ref="dom_glo" />
+        <axis axis_ref="column" />
+        <axis axis_ref="sza" />
+     </grid>
+     <grid id="grid4Dsza_out">
+        <domain domain_ref="dom_out" />
+        <axis axis_ref="column" />
+        <axis axis_ref="sza" />
+     </grid>
+
+ <!-- Grid definitions to allow summing of a 3D variable -->    
+      <grid id="grid_3D" >
+         <domain domain_ref="dom_glo" />
+         <axis axis_ref="lev" />
+       </grid>
+
+       <grid id="grid_sum_axis">
+         <domain domain_ref="dom_glo" />
+         <scalar>
+            <reduce_axis operation="sum" />
+         </scalar>
+       </grid>
+
+       <grid id="grid_sum">
+         <scalar >
+           <reduce_domain operation="sum" local="true" />
+           <reduce_scalar operation="sum" />
+         </scalar>
+         <scalar/>
+       </grid>
+
+  </grid_definition>
+
+</context>

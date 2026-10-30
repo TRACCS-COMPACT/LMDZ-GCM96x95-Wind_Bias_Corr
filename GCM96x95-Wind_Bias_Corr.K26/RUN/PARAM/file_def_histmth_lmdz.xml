@@ -1,0 +1,753 @@
+<!-- $Id: file_def_histmth_lmdz.xml 4298 2022-10-17 08:15:06Z pcadule $ --> 
+<file_definition>
+        <file_group id="defile">
+        <file id="histmth" name="histmth" output_freq="1mo" output_level="_AUTO_"  enabled="_AUTO_" compression_level="2" sync_freq="1mo">
+
+            <!-- VARS 1D -->
+<!--            <field_group operation="once">  -->
+<!--              <field field_ref="Ap" level="1" />  -->
+<!--              <field field_ref="Bp" level="1" />  -->
+<!--              <field field_ref="Alt" level="1" />  -->
+<!--            </field_group>  -->
+
+            <field_group operation="once">
+              <field field_ref="Ahyb" level="1" />
+              <field field_ref="Ahyb_bounds" level="1" />
+              <field field_ref="Bhyb" level="1" />
+              <field field_ref="Bhyb_bounds" level="1" />
+              <field field_ref="Ahyb_mid" level="1" />
+              <field field_ref="Ahyb_mid_bounds" level="1" />
+              <field field_ref="Bhyb_mid" level="1" />
+              <field field_ref="Bhyb_mid_bounds" level="1" />
+            </field_group>
+
+            <field_group operation="instant">
+                <field field_ref="R_ecc" level="1" name="R_ecc" />
+                <field field_ref="R_peri" level="1" name="R_peri" />
+                <field field_ref="R_incl" level="1" name="R_incl" />
+                <field field_ref="solaire" level="1" name="solaire" />
+
+                <field field_ref="rsun1" level="1" name="rsun1" />
+                <field field_ref="rsun2" level="1" name="rsun2" />
+                <field field_ref="rsun3" level="1" name="rsun3" />
+                <field field_ref="rsun4" level="1" name="rsun4" />
+                <field field_ref="rsun5" level="1" name="rsun5" />
+                <field field_ref="rsun6" level="1" name="rsun6" />
+
+                <field field_ref="co2_ppm" level="1" name="co2_ppm" />
+                <field field_ref="CH4_ppb" level="1" name="CH4_ppb" />
+                <field field_ref="N2O_ppb" level="1" name="N2O_ppb" />
+                <field field_ref="CFC11_ppt" level="1" name="CFC11_ppt" />
+                <field field_ref="CFC12_ppt" level="1" name="CFC12_ppt" />
+            </field_group>
+            
+
+           <field_group group_ref="remap_1mo">
+             <!-- VARS 2D -->
+             <field_group operation="average" grid_ref="grid_out">
+                <field field_ref="io_lon" level="1" operation="once"/>
+                <field field_ref="io_lat" level="1" operation="once"/>
+    
+                <field field_ref="phis"         level="1"  />
+                <field field_ref="aire"         level="1"  />
+                <field field_ref="contfracATM"  level="10" />
+                <field field_ref="contfracOR"   level="10" />
+                <field field_ref="flat"         level="5" />
+                <field field_ref="slp"          level="1" />
+                <field field_ref="sza"          level="1" />
+                <field field_ref="ptstar"       level="1" />
+                <field field_ref="pt0"          level="1" />
+                <field field_ref="tsol"         level="1" />
+                <field field_ref="t2m"          level="1" />
+                <field id="ave_t2m_daily_min" field_ref="t2m_min" name="ave_t2m_daily_min" level="1" operation="average" freq_op="1d" expr="@t2m_min" />
+                <field id="ave_t2m_daily_max" field_ref="t2m_max" name="ave_t2m_daily_max" level="1" operation="average" freq_op="1d" expr="@t2m_max" />
+                <field field_ref="t2m_ter" level="10" />
+                <field field_ref="t2m_lic" level="10" />
+                <field field_ref="t2m_oce" level="10" />
+                <field field_ref="t2m_sic" level="10" />
+                <field field_ref="gusts" level="1" />
+                <field field_ref="wind10m" level="1" />
+                <field field_ref="wind10max" level="10" operation="maximum" />
+                <field field_ref="sicf"      level="1" />
+                <field field_ref="q2m"       level="1" />
+                <field field_ref="ustar"     level="1" />
+                <field field_ref="u10m"      level="1" />
+                <field field_ref="v10m"      level="1" />
+                <field field_ref="psol"      level="1" />
+                <field field_ref="qsurf"     level="1" />
+                <field field_ref="ustar_ter" level="10" />
+                <field field_ref="ustar_lic" level="10" />
+                <field field_ref="ustar_oce" level="10" />
+                <field field_ref="ustar_sic" level="10" />
+                <field field_ref="wstar_ter" level="10" />
+                <field field_ref="wstar_lic" level="10" />
+                <field field_ref="wstar_oce" level="10" />
+                <field field_ref="wstar_sic" level="10" />
+                <field field_ref="wstar"    level="5" />
+                <field field_ref="u10m_ter" level="10" />
+                <field field_ref="u10m_lic" level="10" />
+                <field field_ref="u10m_oce" level="10" />
+                <field field_ref="u10m_sic" level="10" />
+                <field field_ref="v10m_ter" level="10" />
+                <field field_ref="v10m_lic" level="10" />
+                <field field_ref="v10m_oce" level="10" />
+                <field field_ref="v10m_sic" level="10" />
+                <field field_ref="qsol"     level="1" />
+                <field field_ref="ndayrain" level="1" operation="instant" />
+                <field field_ref="precip"   level="1" />
+                <field field_ref="rain_fall"   level="1" />
+                <field field_ref="rain_con"   level="1" />
+                <field field_ref="plul"     level="1" />
+                <field field_ref="plun"     level="1" />
+                <field field_ref="pluc"     level="1" />
+                <field field_ref="snow"     level="1" />
+                <field field_ref="evap"     level="1" />
+                <field field_ref="evap_ter" level="1" />
+                <field field_ref="evap_lic" level="1" />
+                <field field_ref="evap_oce" level="1" />
+                <field field_ref="evap_sic" level="1" />
+                <field field_ref="msnow"    level="1" />
+                <field field_ref="fsnow"    level="1" />
+                <field field_ref="tops"     level="1" />
+                <field field_ref="tops0"    level="1" />
+                <field field_ref="topl"     level="1" />
+                <field field_ref="topl0"    level="1" />
+                <field field_ref="SWupTOA"  level="1" />
+                <field field_ref="SWupTOAclr"   level="1" />
+                <field field_ref="SWdnTOA"      level="1" />
+                <field field_ref="SWdnTOAclr"   level="1" />
+                <field field_ref="nettop"       level="1" />
+                <field field_ref="SWup200"      level="15" />
+                <field field_ref="SWup200clr"   level="15" />
+                <field field_ref="SWdn200"      level="15" />
+                <field field_ref="SWdn200clr"   level="15" />
+                <field field_ref="LWup200"      level="15" />
+                <field field_ref="LWup200clr"   level="15" />
+                <field field_ref="LWdn200"      level="15" />
+                <field field_ref="LWdn200clr"   level="15" />
+                <field field_ref="sols"  level="1" />
+                <field field_ref="sols0" level="1" />
+                <field field_ref="soll" level="1" />
+                <field field_ref="soll0" level="1" />
+                <field field_ref="radsol" level="1" />
+                <field field_ref="SWupSFC" level="1" />
+                <field field_ref="SWupSFCclr" level="1" />
+                <field field_ref="SWdnSFC" level="1" />
+                <field field_ref="SWdnSFCclr" level="1" />
+                <field field_ref="LWupSFC" level="1" />
+                <field field_ref="LWupSFCclr" level="1" />
+                <field field_ref="LWdnSFC" level="1" />
+                <field field_ref="LWdnSFCclr" level="1" />
+                <field field_ref="bils" level="1" />
+                <field field_ref="bils_tke" level="1" />
+                <field field_ref="bils_diss" level="1" />
+                <field field_ref="bils_ec" level="1" />
+                <field field_ref="bils_kinetic" level="1" />
+                <field field_ref="bils_enthalp" level="1" />
+                <field field_ref="bils_latent" level="1" />
+                <field field_ref="sens" level="1" />
+                <field field_ref="sens_x" level="11" />
+                <field field_ref="sens_w" level="11" />
+                <field field_ref="flat_x" level="11" />
+                <field field_ref="flat_w" level="11" />
+                <field field_ref="delta_tsurf" level="11" />
+                <field field_ref="cdragh_x" level="11" />
+                <field field_ref="cdragh_w" level="11" />
+                <field field_ref="cdragm_x" level="11" />
+                <field field_ref="cdragm_w" level="11" />
+                <field field_ref="kh" level="11" />
+                <field field_ref="kh_x" level="11" />
+                <field field_ref="kh_w" level="11" />
+                <field field_ref="fder" level="1" />
+                <field field_ref="ffonte" level="1" />
+                <field field_ref="fqcalving" level="1" />
+                <field field_ref="fqfonte" level="1" />
+                <field field_ref="mrroli" level="1" />
+                <field field_ref="runofflic" level="5" />
+                <field field_ref="taux" level="1" />
+                <field field_ref="tauy" level="1" />
+                <field field_ref="taux_ter" level="1" />
+                <field field_ref="taux_lic" level="1" />
+                <field field_ref="taux_oce" level="1" />
+                <field field_ref="taux_sic" level="1" />
+                <field field_ref="tauy_ter" level="1" />
+                <field field_ref="tauy_lic" level="1" />
+                <field field_ref="tauy_oce" level="1" />
+                <field field_ref="tauy_sic" level="1" />
+                <field field_ref="pourc_ter" level="1" />
+                <field field_ref="pourc_lic" level="1" />
+                <field field_ref="pourc_oce" level="1" />
+                <field field_ref="pourc_sic" level="1" />
+                <field field_ref="fract_ter" level="1" />
+                <field field_ref="fract_lic" level="1" />
+                <field field_ref="fract_oce" level="1" />
+                <field field_ref="fract_sic" level="1" />
+                <field field_ref="tsol_ter" level="1" />
+                <field field_ref="tsol_lic" level="1" />
+                <field field_ref="tsol_oce" level="1" />
+                <field field_ref="tsol_sic" level="1" />
+                <field field_ref="evappot_ter" level="1" />
+                <field field_ref="evappot_lic" level="4" />
+                <field field_ref="evappot_oce" level="4" />
+                <field field_ref="evappot_sic" level="4" />
+                <field field_ref="sens_ter" level="1" />
+                <field field_ref="sens_lic" level="1" />
+                <field field_ref="sens_oce" level="1" />
+                <field field_ref="sens_sic" level="1" />
+                <field field_ref="lat_ter" level="1" />
+                <field field_ref="lat_lic" level="1" />
+                <field field_ref="lat_oce" level="1" />
+                <field field_ref="lat_sic" level="1" />
+                <field field_ref="flw_ter" level="1" />
+                <field field_ref="flw_lic" level="1" />
+                <field field_ref="flw_oce" level="1" />
+                <field field_ref="flw_sic" level="1" />
+                <field field_ref="fsw_ter" level="1" />
+                <field field_ref="fsw_lic" level="1" />
+                <field field_ref="fsw_oce" level="1" />
+                <field field_ref="fsw_sic" level="1" />
+                <field field_ref="wbils_ter" level="1" />
+                <field field_ref="wbils_lic" level="1" />
+                <field field_ref="wbils_oce" level="1" />
+                <field field_ref="wbils_sic" level="1" />
+                <field field_ref="wbilo_ter" level="1" />
+                <field field_ref="wbilo_lic" level="1" />
+                <field field_ref="wbilo_oce" level="1" />
+                <field field_ref="wbilo_sic" level="1" />
+                <field field_ref="wevap_ter" level="1" />
+                <field field_ref="wevap_lic" level="1" />
+                <field field_ref="wevap_oce" level="1" />
+                <field field_ref="wevap_sic" level="1" />
+                <field field_ref="wrain_ter" level="1" />
+                <field field_ref="wrain_lic" level="1" />
+                <field field_ref="wrain_oce" level="1" />
+                <field field_ref="wrain_sic" level="1" />
+                <field field_ref="wsnow_ter" level="1" />
+                <field field_ref="wsnow_lic" level="1" />
+                <field field_ref="wsnow_oce" level="1" />
+                <field field_ref="wsnow_sic" level="1" />
+                <field field_ref="cdrm" level="1" />
+                <field field_ref="cdrh" level="1" />
+                <field field_ref="cldl" level="1" />
+                <field field_ref="cldm" level="1" />
+                <field field_ref="cldh" level="1" />
+                <field field_ref="cldt" level="1" />
+                <field field_ref="cldq" level="1" />
+                <field field_ref="cumCO2" level="5" />  <!-- Added PC -->
+                <field field_ref="lwp" level="1" />
+                <field field_ref="iwp" level="1" />
+                <field field_ref="ue" level="1" />
+                <field field_ref="ve" level="1" />
+                <field field_ref="uq" level="1" />
+                <field field_ref="vq" level="1" />
+                <field field_ref="uwat" level="1" />
+                <field field_ref="vwat" level="1" />
+                <field field_ref="cape" level="1" />
+                <field field_ref="pbase" level="1" />
+                <field field_ref="ptop" level="1" />
+                <field field_ref="fbase" level="1" />
+                <field field_ref="plcl" level="1" />
+                <field field_ref="plfc" level="1" />
+                <field field_ref="wbeff" level="1" />
+                <field field_ref="convoccur" level="10" />
+                <field field_ref="prw" level="1" />
+                <field field_ref="prlw" level="1" />
+                <field field_ref="prsw" level="1" />
+                <field field_ref="s_pblh" level="1" />
+                <field field_ref="s_pblt" level="1" />
+                <field field_ref="s_lcl" level="1" />
+                <field field_ref="s_therm" level="1" />
+                <field field_ref="slab_bils_oce" level="1" />
+                <field field_ref="ale_bl" level="1" />
+                <field field_ref="alp_bl" level="1" />
+                <field field_ref="ale_wk" level="1" />
+                <field field_ref="alp_wk" level="1" />
+                <field field_ref="ale" level="1" />
+                <field field_ref="alp" level="1" />
+                <field field_ref="cin" level="1" />
+                <field field_ref="wape" level="1" />
+                <field field_ref="n2" level="1" />
+                <field field_ref="s2" level="1" />
+                <field field_ref="proba_notrig" level="1" />
+                <field field_ref="random_notrig" level="1" />
+                <field field_ref="cv_gen" level="1" />
+                <field field_ref="ale_bl_stat" level="1" />
+                <field field_ref="ale_bl_trig" level="1" />
+                <field field_ref="alp_bl_det" level="1" />
+                <field field_ref="alp_bl_fluct_m" level="1" />
+                <field field_ref="alp_bl_fluct_tke" level="1" />
+                <field field_ref="alp_bl_conv" level="1" />
+                <field field_ref="alp_bl_stat" level="1" />
+                <field field_ref="colO3_strat" level="2" />     <!-- Added ThL -->
+                <field field_ref="colO3_trop"  level="2" />     <!-- Added ThL -->
+                <field field_ref="flx_co2_ocean"  level="1" />
+                <field field_ref="flx_co2_land"   level="1" />
+                <field field_ref="flx_co2_ocean_cor" level="1" /> <!-- Added PC -->
+                <field field_ref="flx_co2_land_cor"  level="1" /> <!-- Added PC -->
+                <field field_ref="flx_co2_ff"  level="1" />
+                <field field_ref="flx_co2_bb"  level="1" />
+
+                <field_group operation="average" detect_missing_value=".true.">
+                    <field field_ref="u850" level="10" />
+                    <field field_ref="u700" level="10" />
+                    <field field_ref="u500" level="10" />
+                    <field field_ref="u200" level="10" />
+                    <field field_ref="u100" level="10" />
+                    <field field_ref="u50" level="10" />
+                    <field field_ref="u10" level="10" />
+                    <field field_ref="v850" level="10" />
+                    <field field_ref="v700" level="10" />
+                    <field field_ref="v500" level="10" />
+                    <field field_ref="v200" level="10" />
+                    <field field_ref="v100" level="10" />
+                    <field field_ref="v50" level="10" />
+                    <field field_ref="v10" level="10" />
+                    <field field_ref="w850" level="10" />
+                    <field field_ref="w700" level="10" />
+                    <field field_ref="w500" level="10" />
+                    <field field_ref="w200" level="10" />
+                    <field field_ref="w100" level="10" />
+                    <field field_ref="w50" level="10" />
+                    <field field_ref="w10" level="10" />
+                    <field field_ref="t850" level="10" />
+                    <field field_ref="t700" level="10" />
+                    <field field_ref="t500" level="10" />
+                    <field field_ref="t200" level="10" />
+                    <field field_ref="t100" level="10" />
+                    <field field_ref="t50" level="10" />
+                    <field field_ref="t10" level="10" />
+                    <field field_ref="q850" level="10" />
+                    <field field_ref="q700" level="10" />
+                    <field field_ref="q500" level="10" />
+                    <field field_ref="q200" level="10" />
+                    <field field_ref="q100" level="10" />
+                    <field field_ref="q50" level="10" />
+                    <field field_ref="q10" level="10" />
+                    <field field_ref="z850" level="10" />
+                    <field field_ref="z700" level="10" />
+                    <field field_ref="z500" level="10" />
+                    <field field_ref="z200" level="10" />
+                    <field field_ref="z100" level="10" />
+                    <field field_ref="z50" level="10" />
+                    <field field_ref="z10" level="10" />
+                </field_group>
+
+                <field field_ref="t_oce_sic" level="1" />
+                <field field_ref="weakinv" level="10" />
+                <field field_ref="dthmin" level="10" />
+                <field field_ref="u10_ter" level="10" />
+                <field field_ref="u10_lic" level="10" />
+                <field field_ref="u10_oce" level="10" />
+                <field field_ref="u10_sic" level="10" />
+                <field field_ref="v10_ter" level="10" />
+                <field field_ref="v10_lic" level="10" />
+                <field field_ref="v10_oce" level="10" />
+                <field field_ref="v10_sic" level="10" />
+                <field field_ref="rh2m" level="5" />
+                <field field_ref="rh2m_min" level="10" operation="minimum" />
+                <field field_ref="rh2m_max" level="10" operation="maximum" />
+                <field field_ref="qsat2m" level="10" />
+                <field field_ref="tpot" level="10" />
+                <field field_ref="tpote" level="10" />
+                <field field_ref="SWnetOR" level="10" />
+                <field field_ref="SWdownOR" level="10" />
+                <field field_ref="LWdownOR" level="10" />
+                <field field_ref="snowl" level="10" />
+                <field field_ref="cape_max" level="10" operation="maximum" />
+                <field field_ref="solldown" level="10" />
+                <field field_ref="dtsvdfo" level="10" />
+                <field field_ref="dtsvdft" level="10" />
+                <field field_ref="dtsvdfg" level="10" />
+                <field field_ref="dtsvdfi" level="10" />
+                <field field_ref="rugs" level="10" />
+                <field field_ref="z0m" level="10" />
+                <field field_ref="z0h" level="10" />
+                <field field_ref="topswad" level="1" />
+                <field field_ref="topswad0" level="1" />
+                <field field_ref="topswai" level="10" />
+                <field field_ref="solswad" level="10" />
+                <field field_ref="solswad0" level="10" />
+                <field field_ref="solswai" level="10" />
+                <field field_ref="toplwad" level="1" />
+                <field field_ref="toplwad0" level="1" />
+                <field field_ref="toplwai" level="10" />
+                <field field_ref="sollwad" level="10" />
+                <field field_ref="sollwad0" level="10" />
+                <field field_ref="sollwai" level="10" />
+                <field field_ref="od550_ASBCM" level="7" />
+                <field field_ref="od550_ASPOMM" level="7" />
+                <field field_ref="od550_ASSO4M" level="7" />
+                <field field_ref="od550_CSSO4M" level="7" />
+                <field field_ref="od550_SSSSM" level="7" />
+                <field field_ref="od550_ASSSM" level="7" />
+                <field field_ref="od550_CSSSM" level="7" />
+                <field field_ref="od550_CIDUSTM" level="7" />
+                <field field_ref="od550_AIBCM" level="7" />
+                <field field_ref="od550_AIPOMM" level="7" />
+                <field field_ref="od550_ASNO3M" level="7" />
+                <field field_ref="od550_CSNO3M" level="7" />
+                <field field_ref="od550_CINO3M" level="7" />
+                <field field_ref="od550_STRAT" level="2" />
+                <field field_ref="dryod550_ASBCM" level="7" />
+                <field field_ref="dryod550_ASPOMM" level="7" />
+                <field field_ref="dryod550_ASSO4M" level="7" />
+                <field field_ref="dryod550_CSSO4M" level="7" />
+                <field field_ref="dryod550_SSSSM" level="7" />
+                <field field_ref="dryod550_ASSSM" level="7" />
+                <field field_ref="dryod550_CSSSM" level="7" />
+                <field field_ref="dryod550_CIDUSTM" level="7" />
+                <field field_ref="dryod550_AIBCM" level="7" />
+                <field field_ref="dryod550_AIPOMM" level="7" />
+                <field field_ref="dryod550_ASNO3M" level="7" />
+                <field field_ref="dryod550_CSNO3M" level="7" />
+                <field field_ref="dryod550_CINO3M" level="7" />
+                <field field_ref="od550aer" level="2" />
+                <field field_ref="dryod550aer" level="2" />
+                <field field_ref="od865aer" level="2" />
+                <field field_ref="abs550aer" level="2" />
+                <field field_ref="od550lt1aer" level="2" />
+                <field field_ref="sconcso4" level="2" />
+                <field field_ref="sconcoa" level="2" />
+                <field field_ref="sconcbc" level="2" />
+                <field field_ref="sconcss" level="11" />
+                <field field_ref="sconcdust" level="11" />
+                <field field_ref="sconcno3" level="11" />
+                <field field_ref="loadso4" level="11" />
+                <field field_ref="loadoa" level="11" />
+                <field field_ref="loadbc" level="11" />
+                <field field_ref="loadss" level="11" />
+                <field field_ref="loaddust" level="11" />
+                <field field_ref="loadno3" level="11" />
+                <field field_ref="swtoaas_nat" level="11" />
+                <field field_ref="swsrfas_nat" level="11" />
+                <field field_ref="swtoacs_nat" level="11" />
+                <field field_ref="swsrfcs_nat" level="11" />
+                <field field_ref="swtoaas_ant" level="11" />
+                <field field_ref="swsrfas_ant" level="11" />
+                <field field_ref="swtoacs_ant" level="11" />
+                <field field_ref="swsrfcs_ant" level="11" />
+                <field field_ref="swtoacf_nat" level="11" />
+                <field field_ref="swsrfcf_nat" level="11" />
+                <field field_ref="swtoacf_ant" level="11" />
+                <field field_ref="swsrfcf_ant" level="11" />
+                <field field_ref="swtoacf_zero" level="11" />
+                <field field_ref="swsrfcf_zero" level="11" />
+                <field field_ref="cldncl" level="11" />
+                <field field_ref="reffclwtop" level="11" />
+                <field field_ref="cldnvi" level="11" />
+                <field field_ref="lcc" level="11" />
+                <field field_ref="wvapp" level="2" />
+                <field field_ref="albe_ter" level="3" />
+                <field field_ref="albe_lic" level="3" />
+                <field field_ref="albe_oce" level="3" />
+                <field field_ref="albe_sic" level="3" />
+                <field field_ref="ages_ter" level="10" />
+                <field field_ref="ages_lic" level="3" />
+                <field field_ref="ages_oce" level="10" />
+                <field field_ref="ages_sic" level="3" />
+                <field field_ref="snow_ter" level="10" />
+                <field field_ref="snow_lic" level="3" />
+                <field field_ref="snow_oce" level="10" />
+                <field field_ref="snow_sic" level="3" />
+                <field field_ref="rugs_ter" level="3" />
+                <field field_ref="rugs_lic" level="3" />
+                <field field_ref="rugs_oce" level="3" />
+                <field field_ref="rugs_sic" level="3" />
+                <field field_ref="z0m_ter" level="3" />
+                <field field_ref="z0m_lic" level="3" />
+                <field field_ref="z0m_oce" level="3" />
+                <field field_ref="z0m_sic" level="3" />
+                <field field_ref="z0h_ter" level="3" />
+                <field field_ref="z0h_lic" level="3" />
+                <field field_ref="z0h_oce" level="3" />
+                <field field_ref="z0h_sic" level="3" />
+                <field field_ref="alb1" level="3" />
+                <field field_ref="alb2" level="3" />
+                <field field_ref="ftime_con" level="4" operation="instant" />
+                <field field_ref="wake_h" level="4" />
+                <field field_ref="wake_dens" level="4" />
+                <field field_ref="wake_s" level="4" />
+                <field field_ref="epmax" level="2" />
+                <field field_ref="plulth" level="10" />
+                <field field_ref="plulst" level="10" />
+                <field field_ref="lmaxth" level="10" />
+                <field field_ref="ftime_th" level="4" />
+                <field field_ref="ftime_deepcv" level="4" />
+                <field field_ref="f0_th" level="4" />
+                <field field_ref="zmax_th" level="4" />
+                <field field_ref="rsut4co2" level="10" />
+                <field field_ref="rlut4co2" level="10" />
+                <field field_ref="rsutcs4co2" level="10" />
+                <field field_ref="rlutcs4co2" level="10" />
+                <field field_ref="dqphy2d" level="2" />
+                <field field_ref="dqlphy2d" level="2" />
+                <field field_ref="dqsphy2d" level="2" />
+                <field field_ref="dqdyn2d" level="4" />
+                <field field_ref="dqldyn2d" level="4" />
+                <field field_ref="dqsdyn2d" level="4" />
+                <field field_ref="dqcon2d" level="4" />
+                <field field_ref="dqwak2d" level="4" />
+                <field field_ref="dqlsc2d" level="4" />
+                <field field_ref="dqvdf2d" level="4" />
+                <field field_ref="dqeva2d" level="4" />
+                <field field_ref="dqlscth2d" level="10" />
+                <field field_ref="dqlscst2d" level="10" />
+                <field field_ref="dqthe2d" level="4" />
+                <field field_ref="dqajs2d" level="4" />
+            </field_group>
+
+            <!-- VARS 3D -->
+            <field_group operation="average" grid_ref="grid_out_presnivs">
+                <field field_ref="CO2" level="5" />  <!-- Added PC -->
+                <field field_ref="dCO2_vdf" level="5" />  <!-- Added PC -->
+                <field field_ref="dCO2_the" level="5" />  <!-- Added PC -->
+                <field field_ref="dCO2_con" level="5" />  <!-- Added PC -->
+                <field field_ref="tke" level="7" />
+                <field field_ref="tke_ter" level="10" />
+                <field field_ref="tke_lic" level="10" />
+                <field field_ref="tke_oce" level="10" />
+                <field field_ref="tke_sic" level="10" />
+                <field field_ref="tke_max_ter" level="10" operation="maximum" />
+                <field field_ref="tke_max_lic" level="10" operation="maximum" />
+                <field field_ref="tke_max_oce" level="10" operation="maximum" />
+                <field field_ref="tke_max_sic" level="10" operation="maximum" />
+                <field field_ref="l_mix_ter" level="10" />
+                <field field_ref="l_mix_lic" level="10" />
+                <field field_ref="l_mix_oce" level="10" />
+                <field field_ref="l_mix_sic" level="10" />
+                <field field_ref="l_mixmin_ter" level="10" />
+                <field field_ref="l_mixmin_lic" level="10" />
+                <field field_ref="l_mixmin_oce" level="10" />
+                <field field_ref="l_mixmin_sic" level="10" />
+                <field field_ref="treedrg_ter" level="10" />
+                <field field_ref="treedrg_lic" level="10" />
+                <field field_ref="treedrg_oce" level="10" />
+                <field field_ref="treedrg_sic" level="10" />
+                
+                
+                <field field_ref="cldtau" level="10" />
+                <field field_ref="cldemi" level="10" />
+                <field field_ref="tke_max" level="4" operation="maximum" />
+                <field field_ref="concso4" level="2" />
+                <field field_ref="concoa" level="2" />
+                <field field_ref="concbc" level="2" />
+                <field field_ref="concss" level="2" />
+                <field field_ref="concdust" level="2" />
+                <field field_ref="concno3" level="2" />
+                <field field_ref="ec550aer" level="2" />
+                <field field_ref="lwcon" level="7" />
+                <field field_ref="iwcon" level="7" />
+                <field field_ref="temp" level="1" />
+                <field field_ref="theta" level="3" />
+                <field field_ref="ovap" level="1" />
+                <field field_ref="ovapinit" level="10" />
+                <field field_ref="oliq" level="1" />
+                <field field_ref="ocond" level="1" />
+                <field field_ref="geop" level="3" />
+                <field field_ref="geoph" level="3" />
+                <field field_ref="vitu" level="1" />
+                <field field_ref="vitv" level="1" />
+                <field field_ref="vitw" level="1" />
+                <field field_ref="pres" level="1" />
+                <field field_ref="paprs" level="3" />
+                <field field_ref="mass" level="3" />
+                <field field_ref="zfull" level="1" />
+                <field field_ref="zhalf" level="7" />
+                <field field_ref="rneb" level="1" />
+                <field field_ref="rnebcon" level="7" />
+                <field field_ref="rnebls" level="7" />
+                <field field_ref="rneblsvol" level="7" />
+                <field field_ref="rhum" level="1" />
+                <field field_ref="ozone" level="3" />
+                <field field_ref="ozone_daylight" level="2" />
+                <field field_ref="upwd" level="7" />
+                <field field_ref="ep" level="7" />
+                <field field_ref="duphy" level="7" />
+                <field field_ref="dtphy" level="7" />
+                <field field_ref="dqphy" level="7" />
+                <field field_ref="dqlphy" level="7" />
+                <field field_ref="dqsphy" level="7" />
+                <field field_ref="pr_con_l" level="3" />
+                <field field_ref="pr_con_i" level="3" />
+                <field field_ref="pr_lsc_l" level="3" />
+                <field field_ref="pr_lsc_i" level="3" />
+                <field field_ref="re" level="5" />
+                <field field_ref="fl" level="5" />
+                <field field_ref="scdnc" level="11" />
+                <field field_ref="reffclws" level="11" />
+                <field field_ref="reffclwc" level="11" />
+                <field field_ref="lcc3d" level="11" />
+                <field field_ref="lcc3dcon" level="11" />
+                <field field_ref="lcc3dstra" level="11" />
+                <field field_ref="cldwatmxrat" level="5" />
+                <field field_ref="icc3dcon" level="11" />
+                <field field_ref="icc3dstra" level="11" />
+                <field field_ref="cldicemxrat" level="5" />
+                <field field_ref="clwcon" level="7" />
+                <field field_ref="Ma" level="7" />
+                <field field_ref="dnwd" level="7" />
+                <field field_ref="dnwd0" level="7" />
+                <field field_ref="mc" level="7" />
+                <field field_ref="dtdyn" level="7" />
+                <field field_ref="dqdyn" level="7" />
+                <field field_ref="dqldyn" level="7" />
+                <field field_ref="dqsdyn" level="7" />
+                <field field_ref="dudyn" level="7" />
+                <field field_ref="dvdyn" level="7" />
+                <field field_ref="dtcon" level="7" />
+                <field field_ref="ducon" level="7" />
+                <field field_ref="dvcon" level="7" />
+                <field field_ref="dqcon" level="7" />
+                <field field_ref="dtwak" level="7" />
+                <field field_ref="dqwak" level="7" />
+                <field field_ref="wake_deltat" level="7" />
+                <field field_ref="wake_deltaq" level="7" />
+                <field field_ref="wake_omg" level="7" />
+                <field field_ref="wdtrainA" level="9" />
+                <field field_ref="wdtrainM" level="9" />
+                <field field_ref="ftd" level="7" />
+                <field field_ref="fqd" level="7" />
+                <field field_ref="dtlsc" level="7" />
+                <field field_ref="dtlschr" level="7" />
+                <field field_ref="dqlsc" level="7" />
+                <field field_ref="beta_prec" level="9" />
+                <field field_ref="dtvdf" level="7" />
+                <field field_ref="dtvdf_x" level="11" />
+                <field field_ref="dtvdf_w" level="11" />
+                <field field_ref="dtdis" level="7" />
+                <field field_ref="dqvdf" level="7" />
+                <field field_ref="dqvdf_x" level="11" />
+                <field field_ref="dqvdf_w" level="11" />
+                <field field_ref="dteva" level="7" />
+                <field field_ref="dqeva" level="7" />
+                <field field_ref="dqlscth" level="10" />
+                <field field_ref="dqlscst" level="10" />
+                <field field_ref="dtlscth" level="10" />
+                <field field_ref="dtlscst" level="10" />
+                <field field_ref="ptconvth" level="7" />
+                <field field_ref="ptconv" level="7" />
+                <field field_ref="ratqs" level="7" />
+                <field field_ref="dtthe" level="7" />
+                <field field_ref="e_th" level="9" />
+                <field field_ref="lambda_th" level="10" />
+                <field field_ref="q_th" level="9" />
+                <field field_ref="s_th" level="9" />
+                <field field_ref="s_env" level="9" />
+                <field field_ref="sigma_th" level="9" />
+                <field field_ref="sigma_env" level="9" />
+                <field field_ref="d_th" level="9" />
+                <field field_ref="dqthe" level="7" />
+                <field field_ref="dtajs" level="7" />
+                <field field_ref="dqajs" level="7" />
+                <field field_ref="dtswr" level="7" />
+                <field field_ref="dtsw0" level="7" />
+                <field field_ref="dtlwr" level="7" />
+                <field field_ref="dtlw0" level="7" />
+                <field field_ref="dtec"  level="7" />
+                <field field_ref="duvdf" level="7" />
+                <field field_ref="dvvdf" level="7" />
+                <field field_ref="duoro" level="7" />
+                <field field_ref="dvoro" level="7" />
+                <field field_ref="dulif" level="7" />
+                <field field_ref="dvlif" level="7" />
+                <field field_ref="du_gwd_hines" level="7" />
+                <field field_ref="dv_gwd_hines" level="7" />
+                <field field_ref="du_gwd_front" level="7" />
+                <field field_ref="dv_gwd_front" level="7" />
+                <field field_ref="east_gwstress" level="10" />
+                <field field_ref="west_gwstress" level="10" />
+                <field field_ref="dtoro" level="10" />
+                <field field_ref="dtlif" level="7" />
+                <field field_ref="dthin" level="7" />
+                <field field_ref="tnt"  level="10" />
+                <field field_ref="tntc" level="10" />
+                <field field_ref="tntr" level="10" />
+                <field field_ref="tntscpbl" level="10" />
+                <field field_ref="tnhus"    level="10" />
+                <field field_ref="tnhusc"   level="10" />
+                <field field_ref="tnhusscpbl" level="10" />
+                <field field_ref="h2o" level="10" />
+                <field field_ref="mcd" level="10" />
+                <field field_ref="dmc" level="10" />
+                <field field_ref="ref_liq" level="5" />
+                <field field_ref="ref_ice" level="10" />
+                <field field_ref="stratomask" level="1" />
+                <field field_ref="cool_volc" level="1" />
+                <field field_ref="heat_volc" level="1" />
+            </field_group>
+
+            <field_group operation="average" grid_ref="grid_out_presinter">
+                <field field_ref="a_th" level="9" />
+                <field field_ref="f_th" level="7" />
+                <field field_ref="w_th" level="7" />
+                <field field_ref="rsucs" level="10" />
+                <field field_ref="rsdcs" level="10" />
+                <field field_ref="rlucs" level="10" />
+                <field field_ref="rldcs" level="10" />
+                <field field_ref="rldcs4co2" level="10" />
+                <field field_ref="rlucs4co2" level="10" />
+                <field field_ref="rsdcs4co2" level="10" />
+                <field field_ref="rsucs4co2" level="10" />
+                <field field_ref="rsu4co2" level="10" />
+                <field field_ref="rlu4co2" level="10" />
+                <field field_ref="rsd4co2" level="10" />
+                <field field_ref="rld4co2" level="10" />
+                <field field_ref="Vprecip" level="11" />
+                <field field_ref="rsu" level="5" />
+                <field field_ref="rsd" level="5" />
+                <field field_ref="rlu" level="5" />
+                <field field_ref="rld" level="5" />
+                <field field_ref="kz" level="4" />
+                <field field_ref="kz_max" level="4" operation="maximum" />
+                <field field_ref="evu" level="10" />
+            </field_group>
+
+<!--
+                <field field_ref="psbg" level="5" />
+                <field field_ref="tro3" level="5" />
+                <field field_ref="tro3_daylight" level="5" />
+-->
+
+            <!-- VARS 3D -->
+            <field_group operation="average" detect_missing_value=".true." grid_ref="grid_out_plev17">
+                <field field_ref="temp" name="ta" grid_ref="grid_out_plev17" level="4" />
+                <field field_ref="geop" name="zg" grid_ref="grid_out_plev17" level="4" />
+                <field field_ref="ovap" name="hus" grid_ref="grid_out_plev17" level="4" />
+                <field field_ref="rhum" name="hur" grid_ref="grid_out_plev17" level="4" />
+                <field field_ref="vitu" name="ua" grid_ref="grid_out_plev17" level="4" />
+                <field field_ref="vitv" name="va" grid_ref="grid_out_plev17" level="4" />
+                <field field_ref="vitw" name="wap" grid_ref="grid_out_plev17" level="4" />
+<!--
+                <field field_ref="tro3" name="tro3" grid_ref="grid_out_plev17" level="4" />
+                <field field_ref="tro3_daylight" name="tro3_daylight" grid_ref="grid_out_plev17" level="4" />
+                <field field_ref="tnondef" name="psbg" grid_ref="grid_out_plev17" level="4" />
+                <field field_ref="vitu_vitv" name="uv" grid_ref="grid_out_plev17" level="4" />
+                <field field_ref="vitv_ovap" name="vq" grid_ref="grid_out_plev17" level="4" />
+                <field field_ref="vitv_temp" name="vT" grid_ref="grid_out_plev17" level="4" />
+                <field field_ref="vitw_ovap" name="wq" grid_ref="grid_out_plev17" level="4" />
+                <field field_ref="vitv_geop" name="vphi" grid_ref="grid_out_plev17" level="4" />
+                <field field_ref="vitw_temp" name="wT" grid_ref="grid_out_plev17" level="4" />
+                <field field_ref="vtiu_vitu" name="u2" grid_ref="grid_out_plev17" level="4" />
+                <field field_ref="vitv_vitv" name="v2" grid_ref="grid_out_plev17" level="4" />
+                <field field_ref="temp_temp" name="T2" grid_ref="grid_out_plev17" level="4" />
+-->
+            </field_group>
+
+            <!-- VARS 3D -->
+            <field_group operation="average" detect_missing_value=".true." grid_ref="grid_out_plev37">
+                <field field_ref="temp" name="ta37" grid_ref="grid_out_plev37" level="4" />
+                <field field_ref="vitu" name="ua37" grid_ref="grid_out_plev37" level="4" />
+                <field field_ref="vitv" name="va37" grid_ref="grid_out_plev37" level="4" />
+            </field_group>
+
+            <!-- VARS 3D -->
+            <field_group operation="average" grid_ref="grid_out_spectband">
+                <field field_ref="solbnd" level="10" />
+            </field_group>
+         
+          </field_group>
+
+        </file>
+
+        </file_group>
+    </file_definition>

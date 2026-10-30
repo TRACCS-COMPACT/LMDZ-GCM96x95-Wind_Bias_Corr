@@ -1,0 +1,131 @@
+##############################################################################
+# PARAMETRES ET CLES DE CONFIGURATION LMDZ 
+# Cette parie sera bientot extrait dans un fichier config.def
+##############################################################################
+# D: Valeur par default
+#
+##############################################################################
+# PARAMETRES ET CLES DE LA PHYSIQUE LMDZ
+##############################################################################
+# D: Valeur par default
+#
+#Parametres Orographiques et cdrags
+#**********************************
+##   Si=.T. ,  lecture du fichier limit avec la bonne annee 
+ok_limitvrai=n
+#Cdrags 
+f_cdrag_stable=1.
+f_cdrag_ter=1.
+f_cdrag_oce=0.7
+#cdmmax
+cdmmax=2.5E-3
+#cdhmax
+cdhmax=2.0E-3
+##  Orodr  ou  non   pour l orographie
+ok_orodr=y
+##  Orolf  ou  non   pour l orographie              
+ok_orolf=y
+#Rugoro
+f_rugoro=0.
+#
+# Rayonnement
+#*********************
+# activation du nouveau code de rayonnement RRTM
+# 0 : Ancien code et 1 : RRTM (D=0)
+iflag_rrtm=0
+## NSW need to be 6 when iflag_rrtm=1
+NSW=2   
+#
+#
+# Parametres nuages
+#******************
+#seuils de la precipitation des nuages strateformes (D: 2.6e-4 2.6e-4)
+cld_lc_lsc=6.e-4
+cld_lc_con=6.e-4
+#constante de temps pour eleminer eau lsc et convective (D: 3600. 3600.)
+cld_tau_lsc=1800.
+cld_tau_con=1800.
+#facteurs correctifs sur la vitesse de chute des cristaux de glace (D: 1 1)
+ffallv_lsc=1.35
+ffallv_con=1.35
+#coefficient sur la reevaporation de la pluie (D: 2.e-5 n)
+coef_eva=1e-4
+reevap_ice=y
+#calcul des proprietes des nuages convectifs (D:1 0.375 1.e-4) 
+iflag_cldcon=6
+fact_cldcon=1.
+facttemps=0.
+#calcul eau condensee et fraction nuageuse a partir des PDF (D:0, 0:version avec ratqs sinon nouvelles PDFs)  
+iflag_pdf=1
+#calcul epaisseur optique et emmissivite des nuages (D: y 1 0.01 0.3)
+ok_newmicro=y
+iflag_ratqs=2
+ratqsbas=0.002
+ratqshaut=0.25
+#rayon effectif pour les nuages de glace (D:35)
+rad_froid=35
+#rayons effectifs pour les nuages eau liq (tailles des gouttes d eau nuageuse, D: 13 9)
+rad_chau1=12
+rad_chau2=11
+##  Choix ou non  de  New oliq               
+new_oliq=y
+#
+rei_min=20.
+rei_max=61.29
+#
+t_glace_min=258.
+t_glace_max=273.13
+#
+# Flags Convection 
+#*****************
+#flag  pour la convection (D:2, 1:LMD, 2:Tiedtke, 3:KE nouvelle physique, 30:KE IPCC)
+iflag_con=3
+#niveau de sorties des diagnos sur la conservation energie
+if_ebil=0
+#efficacite de precepitation maxim (D:.993)
+epmax=0.997
+#ajustement convectif sec au debut de la convection (D: n 0)
+ok_adj_ema=n
+iflag_clw=0
+#fermeture convective (D:1, 0:AR4, 2:ALE and ALP)
+iflag_clos=2
+#loi de melange a l entrainement  (D:1, 0:AR4=PDF plate, 1=PDF)
+iflag_mix=1
+#poids des PDFs plate et en cloche (D: 1 0)
+qqa1=1.
+qqa2=0.
+# Facteur multiplication des precip convectives dans KE
+cvl_corr=1.0
+#
+Fmax=0.65
+#
+# Flags Couche limite
+#********************
+#shema de CL des thermiques (D:0, 0:ajustement sec,=>1:versions thermiques) 
+iflag_thermals=17
+#pas de temps du spliting pour les thermiques
+nsplit_thermals=1
+tau_thermals=0.
+iflag_thermals_ed=10
+iflag_thermals_optflux=0
+#shema de la couche de surface (D:1, 1:LMD, 8:Mellor-Yamada) 
+iflag_pbl=11
+#diffusion turbulente
+ksta_ter=1.e-7
+ksta=1.e-10
+#ok_kzmin : calcul Kzmin dans la CL de surface
+ok_kzmin=y
+#couplage ou non avec la convection
+iflag_coupl=5 (0:AR4 et 1:nouvelle physique)
+seuil_inversion=-0.08
+#rendement sur la puissance fournie par les thermiques a la convection
+alp_bl_k=0.5
+#
+# Flags wakes
+#************
+#activation ou non des wakes (D:0, 0:AR4, 1:nouvelle physique) 
+iflag_wake=1
+alp_offset=0.
+
+nsplit_phys=1
+

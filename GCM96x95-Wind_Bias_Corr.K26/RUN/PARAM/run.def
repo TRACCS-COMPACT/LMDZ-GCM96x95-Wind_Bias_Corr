@@ -1,0 +1,60 @@
+# $Id$
+#
+INCLUDEDEF=physiq.def
+INCLUDEDEF=gcm.def
+INCLUDEDEF=vert.def
+INCLUDEDEF=orchidee.def
+INCLUDEDEF=config.def
+INCLUDEDEF=reprobus.def
+INCLUDEDEF=guide.def
+INCLUDEDEF=inca.def
+## Type de calendrier utilise
+## valeur possible: earth_360d (defaut), earth_365d, earth_366d
+calend= _AUTOBLOCKER_
+## Jour de l etat initial ( = 350  si 20 Decembre ,par expl. ,comme ici )
+dayref= _AUTOBLOCKER_
+##  Annee de l etat  initial (   avec  4  chiffres   )
+anneeref= _AUTOBLOCKER_
+## Nombre de jours d integration
+nday= _AUTOBLOCKER_
+## Remise a zero de la date initiale
+raz_date= _AUTOBLOCKER_
+## periode de sortie des variables de controle (en pas)
+iconser=240
+## periode d ecriture du fichier histoire (en jour)
+iecri=1
+## flag de sortie dynzon
+ok_dynzon=n
+## activation du calcul d equilibrage de charge
+adjust= n
+## activation du filtre fft
+use_filtre_fft=y
+## niveau d impression de controle (actuellement, le mode -debug plante pour prt_level>0)
+prt_level=0
+###
+### Informations sur la configuration utilisee
+###
+### type_ocean = force / slab  /couple
+### type_ocean is modified automatically by the lmdz.driver 
+type_ocean=_AUTOBLOCKER_
+### version_ocean = nemo / opa8
+version_ocean=nemo
+### activation passage courants surface ocean-glace
+cpl_current=y
+### VEGET= y si ORCHIDEE, =n si bucket
+### VEGET is modified automatically by the lmdz.driver 
+VEGET=_AUTOBLOCKER_
+### Choice of tracers type_trac=lmdz/inca/repr
+### type_trac is set automatically by the lmdz.driver
+type_trac=_AUTOBLOCKER_
+### config_inca=aero/chem needed only if type_trac=inca
+config_inca=_AUTOBLOCKER_ 
+### To activate XIOS ouputs only, set n to use IOIPSL
+ok_all_xml= y
+### Only read by ce0l : Do not set land points on Antartic
+no_ter_antartique=y
+### Do not call phytrac to speed things up
+iflag_phytrac=_AUTOBLOCKER_: DEFAULT = 0
+### cpl_old_calving : use n for DYNAMICO and new coupling weight(MR025)
+cpl_old_calving = _AUTO_
+

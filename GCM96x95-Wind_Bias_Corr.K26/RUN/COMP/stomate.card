@@ -1,0 +1,78 @@
+[Compatibility]
+libIGCM=1.0
+
+[UserChoices]
+# NINPUT_UPDATE=1Y: change in nitrogen input maps every year. 
+# Nitrogen input maps should be set in BoundaryFiles/List for 1Y or in InitialStateFile for 0Y.
+NINPUT_UPDATE=0Y
+
+# STOMATE_IMPOSE_CN: impose nitrogen
+# If STOMATE_IMPOSE_CN=y the file leaf_cn.nc must be available
+# If STOMATE_IMPOSE_CN=n the other N-input files are needed, see commented files below
+STOMATE_IMPOSE_CN=y
+
+
+# Specify output level for output files
+# Only the files stomate_history.nc and stomate_ipcc_history.nc can be set here.
+# output_level_filname=0     : lowest level writing only variables needed for the monitoring
+# output_level_filname=10    : highest level which will output all variables
+# output_level_filname=NONE  : deactivate the file
+output_level_stomate_history = 10
+output_level_stomate_ipcc_history = 1
+
+# Specify output frequency for each file [1y, 1mo, 1d]
+# Settings using WriteFrequency in config.card are not longer used
+output_freq_stomate_history = 1mo
+output_freq_stomate_ipcc_history = 1mo
+
+
+[InitialStateFiles]
+List=    (${R_IN}/SRF/NITROGEN/CN_LEAF/cn_leaf_1850_v0.nc, cnleaf_map.nc)
+
+# Following files are needed if STOMATE_IMPOSE_CN=n
+#List=   (${R_IN}/SRF/NITROGEN/N_FERTILISATION/NMIP/synthetic/historical/Nfer_pasture_2000.nc, nfert_pasture.nc) ,\
+#     (${R_IN}/SRF/NITROGEN/N_FERTILISATION/NMIP/synthetic/historical/Nfer_cropland_2000.nc, nfert_cropland.nc) ,\
+#     (${R_IN}/SRF/NITROGEN/N_FERTILISATION/NMIP/manure/historical/Nmanure_pasture_2000.nc, nmanure_pasture.nc) ,\
+#     (${R_IN}/SRF/NITROGEN/N_FERTILISATION/NMIP/manure/historical/Nmanure_cropland_2000.nc, nmanure_cropland.nc) ,\
+#     (${R_IN}/SRF/NITROGEN/N_DEPOSITION/CCMI_ndep/historical/CCMI_ndep_nhx_2000.nc, ndep_nhx.nc), \
+#     (${R_IN}/SRF/NITROGEN/N_DEPOSITION/CCMI_ndep/historical/CCMI_ndep_noy_2000.nc, ndep_noy.nc), \
+#     (${R_IN}/SRF/NITROGEN/BNF/bnf_1850.nc, bnf.nc)
+
+
+[BoundaryFiles]
+List=   ()
+ListNonDel= ()
+
+[SmoothFiles]
+List=   ()
+
+[ParametersFiles]
+List=   ()
+
+[RestartFiles]
+List=   (stomate_rest_out.nc, stomate_rest.nc, stomate_rest_in.nc)
+
+[OutputText]
+List=   ()
+
+[OutputFiles]
+List=   (stomate_history.nc,      ${R_OUT_SBG_O_M}/${PREFIX}_1M_stomate_history.nc,      Post_1M_stomate_history),    \
+        (stomate_ipcc_history.nc, ${R_OUT_SBG_O_M}/${PREFIX}_1M_stomate_ipcc_history.nc, Post_1M_stomate_ipcc_history)
+
+[Post_1M_stomate_history]
+Patches = ()
+GatherWithInternal = (lon, lat, Areas, CONTFRAC, time_counter, time_centered, time_centered_bounds)
+TimeSeriesVars2D = (T2M_MONTH,RESOLUTION_X,RESOLUTION_Y,CONVFLUX,CFLUX_PROD10,CFLUX_PROD100,HARVEST_ABOVE)
+ChunckJob2D = NONE
+TimeSeriesVars3D = (LAI,VEGET_COV_MAX,NPP,GPP,HET_RESP,MAINT_RESP,GROWTH_RESP,AGE,HEIGHT,TOTAL_M,TOTAL_BM_LITTER,TOTAL_SOIL_CARB,CO2_FIRE,TOTAL_TURN,WOOD_HARVEST_PFT)
+ChunckJob3D = NONE
+Seasonal = ON
+
+[Post_1M_stomate_ipcc_history]
+Patches = ()
+GatherWithInternal = (lon, lat, Areas, CONTFRAC, time_counter, time_centered, time_centered_bounds)
+TimeSeriesVars2D = (cVeg, cLitter, cSoil, cProduct, lai, gpp, ra, npp, rh, fFire, fHarvest, fLuc, nbp, fVegLitter, fLitterSoil, cLeaf, cWood, cRoot, cMisc, cLitterAbove, cLitterBelow, cSoilFast, cSoilMedium, cSoilSlow, landCoverFrac, treeFracPrimDec, treeFracPrimEver, c3PftFrac, c4PftFrac, rGrowth, rMaint, nppLeaf, nppWood, nppRoot, nep, fWoodharvest)
+ChunckJob2D = NONE
+TimeSeriesVars3D = ()
+ChunckJob3D = NONE
+Seasonal = ON

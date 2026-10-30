@@ -1,0 +1,31 @@
+[Compatibility]
+libIGCM=1.0
+
+[UserChoices]
+
+[InitialStateFiles]
+List=	(/ccc/work/cont003/gen1523/bargexis/modipsl/modeles/PYTHON/models_wind_bc.py, models.py), \
+	(/ccc/work/cont003/gen1523/bargexis/modipsl/modeles/PYTHON/last-model_R228_train_numpy_2141802_epoch=39-val_loss=1.65_state_dict.pt, weights_state_dict.pt), \
+	(/ccc/work/cont003/gen1523/bargexis/modipsl/modeles/PYTHON/R228_normalisation.npz, R228_normalisation.npz)
+
+[BoundaryFiles]
+List=	()
+ListNonDel= ()
+
+[SmoothFiles]
+List=	()
+
+[ParametersFiles]
+List=	()
+
+[RestartFiles]
+List=	(NONE)
+
+[OutputText]
+List=   (eophis.out, eophis.err, eophis_preprod.*, namcouple*, eophis_nml, debug.*, nout.*)
+
+[OutputFiles]
+List=   ()
+
+
+

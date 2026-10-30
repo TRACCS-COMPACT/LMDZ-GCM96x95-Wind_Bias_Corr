@@ -1,0 +1,240 @@
+[Compatibility]
+libIGCM=1.0
+
+[UserChoices]
+# Physics package to use :
+# LMDZ_Physics=AP for standard/old physics(defalut), can be used with LMDZ4_AR5 or LMDZ5/trunk sources
+# LMDZ_Physics=NPv3.2 for an early version of the new physics, to be used with LMDZ5/trunk revision 1554 or later
+# LMDZ_Physics=NPv5.70 for new physics to be used with LMDZ5/testing revision 2595 or later
+# LMDZ_Physics=NPv5.80bz0 for new physics to be used with LMDZ5/trunk revision 2699 or later
+# LMDZ_Physics=NPv6.0.7 for new physics to be used with LMDZ5/trunk revision 2720 or later
+# LMDZ_Physics=NPv6.0.8 for new physics to be used with LMDZ5/trunk revision 2739 or later
+# LMDZ_Physics=NPv6.0.15_T or NPv6.0.15_S to be used with LMDZ6/branches/IPSLCM6.0.15 rev 3224
+# LMDZ_Physics=NPv6.1 to be used with LMDZ6/branches/IPSLCM6.0.15 rev 3301
+# LMDZ_Physics=NPv6.1.3 as NPv6.1 but allows tau_gl to be modified
+# LMDZ_Physics=NPv6.2 as used in QUEST CMIP6 simulations
+LMDZ_Physics=NPv6.2
+
+# Set ConfType to choose parameters for aerosols, solar and green house gazes.
+# The parameter file PARAM/config.def_$ConfType will be used.
+# ConfType=preind/actuel/annuel
+ConfType=annuel
+
+# Manage radiative aerosol effect and ozone
+flag_aerosol=6
+ok_ade=y
+ok_aie=y
+aerosol_couple=n
+read_climoz=1
+ok_cdnc=y
+
+# Set tau_gl depending on the forcing file for the sea-ice (use 2. for amip and 1. for hadisst)
+tau_gl=2.
+
+# ByPass_hgardfou_teta=y : modify teta_ parameters for following CumulPeriod only
+ByPass_hgardfou_teta=n
+
+# ByPass_hgardfou_mats=y : set parameter purmats=y for following CumulPeriod only
+ByPass_hgardfou_mats=n
+
+# Nugding : ok_guide=y/n
+# If ok_guide=y, add nudging files(u.nc, v.nc, hur.nc,...) in BoundaryFiles section below.
+ok_guide=y
+
+# Specify which output file to activate and at which output_level
+# Use an integer to specify the output level or NONE if to deactivate the file
+# output_level_filename=1     : activate the corresponding file with low output level
+# output_level_filename=10    : activate the corresponding file with high output level
+# output_level_filename=NONE  : the file will not be written
+output_level_histmth = 5
+output_level_histday = 5
+output_level_histhf  = 5
+output_level_histmthNMC = NONE
+output_level_histdayNMC = NONE
+output_level_histhfNMC  = NONE
+output_level_histstrataer = NONE
+output_level_histdaystrataer = NONE
+output_level_histstn      = NONE
+
+# Activate COSP in config.def and set corresponding output files
+LMDZ_COSP_OK=n
+output_level_histmthCOSP = NONE
+output_level_histdayCOSP = NONE
+output_level_histhfCOSP  = NONE
+
+[InitialStateFiles]
+List=	(/ccc/work/cont003/gen1523/p25krin/IGCM/ATM/Restart/amip96x95x79-Aude/AMIP-limit-96x95x79_2000_start.nc, start.nc),\
+        (/ccc/work/cont003/gen1523/p25krin/IGCM/ATM/Restart/amip96x95x79-Aude/AMIP-limit-96x95x79_2000_startphy.nc, startphy.nc) 
+
+[BoundaryFiles]
+# With CMIP6 aerosols version 1
+List=   (/ccc/work/cont003/gen1523/p25krin/IGCM/ATM/LIMIT/amip96x95x79-Aude/AMIP-limit-96x95x79_${year}_limit.nc, limit.nc),\
+        (${R_IN}/ATM/AEROSOLS/CMIP6/v1/${RESOL_ATM_XY}/L${RESOL_ATM_Z}/aerosols2014_from_inca.nc,              aerosols${year}.nc),\
+        (/ccc/work/cont003/gen1523/p25krin/IGCM/ATM/LIMIT/amip96x95x79-Aude/AMIP-limit-96x95x79_${year}_climoz_LMDZ.nc, climoz_LMDZ.nc),\
+        (${R_IN}/ATM/SOLAR/CMIP6/v3.1corr/Future/solarforcing_v3.1_daily_6bands_${year}.nc,        solarforcing.nc),\
+        (${R_IN}/ATM/STRATAERO/CMIP6/v1/${RESOL_ATM_XY}/L${RESOL_ATM_Z}/taulwstrat.2D.2014.nc, taulwstrat.2D.nc),\
+        (${R_IN}/ATM/STRATAERO/CMIP6/v1/${RESOL_ATM_XY}/L${RESOL_ATM_Z}/tauswstrat.2D.2014.nc, tauswstrat.2D.nc),\
+        (/ccc/work/cont003/gen1523/p25krin/Debiaisage/Fichiers_Correction/R200+R209+R210/lisse_guide_R200+R209+R210_1981-2000_liss20_1an/R200+R209+R210_${year}_u_1981-2000.nc, u.nc),\
+        (/ccc/work/cont003/gen1523/p25krin/Debiaisage/Fichiers_Correction/R200+R209+R210/lisse_guide_R200+R209+R210_1981-2000_liss20_1an/R200+R209+R210_${year}_v_1981-2000.nc, v.nc),\
+        (/ccc/work/cont003/gen1523/p25krin/Debiaisage/Fichiers_Correction/R200+R209+R210/lisse_guide_R200+R209+R210_1981-2000_liss20_1an/R200+R209+R210_${year}_P_1981-2000.nc, P.nc)
+
+# Note: the SOLARANDVOLCANOES.txt is only used for LMDZ_Physics=AP and NPv3.2 (if ok_suntime_rrtm=n)
+# Add the following file for LMDZ_Physics=AP (${R_IN}/ATM/IPCC_AR5/HISTORIQUE/SOLARANDVOLCANOES_1610_2008.txt, SOLARANDVOLCANOES.txt)
+ListNonDel= (${R_IN}/ATM/GHG/CMIP6/ssp/ssp245/CO2_CMIP6_2015_2500.txt, CO2.txt),\
+            (${R_IN}/ATM/GHG/CMIP6/ssp/ssp245/CH4_CMIP6_2015_2500.txt, CH4.txt),\
+            (${R_IN}/ATM/GHG/CMIP6/ssp/ssp245/N2O_CMIP6_2015_2500.txt, N2O.txt),\
+            (${R_IN}/ATM/GHG/CMIP6/ssp/ssp245/CFC11eq_CMIP6_2015_2500.txt, CFC11.txt),\
+            (${R_IN}/ATM/GHG/CMIP6/ssp/ssp245/CFC12eq_CMIP6_2015_2500.txt, CFC12.txt),\
+            (${R_IN}/ATM/AEROSOLS/CMIP6/v1/${RESOL_ATM_XY}/L${RESOL_ATM_Z}/aerosols1850_from_inca.nc, aerosols.nat.nc)
+
+[SmoothFiles]
+List=   ()
+
+[ParametersFiles]
+List=   (${SUBMIT_DIR}/PARAM/physiq.def_${LMDZ_Physics}, physiq.def),       \
+        (${SUBMIT_DIR}/PARAM/gcm.def_${RESOL_ATM_XY}_${LMDZ_Physics}, gcm.def),\
+        (${SUBMIT_DIR}/PARAM/vert.def_L${RESOL_ATM_Z},   vert.def),         \
+        (${MODIPSL}/modeles/LMDZ/DefLists/cosp_input_nl.txt, .),            \
+        (${MODIPSL}/modeles/LMDZ/DefLists/cosp_output_nl.txt, .),           \
+        (${SUBMIT_DIR}/PARAM/config.def_${ConfType},  config.def),          \
+        (${SUBMIT_DIR}/PARAM/guide.def, .),                                 \
+        (${SUBMIT_DIR}/PARAM/run.def, .),                                   \
+        (${SUBMIT_DIR}/PARAM/traceur.def, .),                               \
+        (${SUBMIT_DIR}/PARAM/iodef.xml, . ),                                \
+        (${SUBMIT_DIR}/PARAM/context_lmdz.xml, . ),            \
+        (${SUBMIT_DIR}/PARAM/field_def_lmdz.xml, . ),          \
+	(${MODIPSL}/modeles/LMDZ/DefLists/field_def_cosp1.xml, . ),         \
+        (${SUBMIT_DIR}/PARAM/file_def_histmth_lmdz.xml, . ),   \
+        (${MODIPSL}/modeles/LMDZ/DefLists/file_def_histmthCOSP_lmdz.xml, .),\
+        (${MODIPSL}/modeles/LMDZ/DefLists/file_def_histmthNMC_lmdz.xml, . ),\
+        (${MODIPSL}/modeles/LMDZ/DefLists/file_def_histday_lmdz.xml, . ),   \
+        (${MODIPSL}/modeles/LMDZ/DefLists/file_def_histdayCOSP_lmdz.xml, .),\
+        (${MODIPSL}/modeles/LMDZ/DefLists/file_def_histdayNMC_lmdz.xml, . ),\
+        (${SUBMIT_DIR}/PARAM/file_def_histhf_lmdz.xml, . ),    \
+        (${MODIPSL}/modeles/LMDZ/DefLists/file_def_histhfCOSP_lmdz.xml, .), \
+        (${MODIPSL}/modeles/LMDZ/DefLists/file_def_histhfNMC_lmdz.xml, . ), \
+        (${MODIPSL}/modeles/LMDZ/DefLists/file_def_histstn_lmdz.xml, . ),   \
+        (${MODIPSL}/modeles/LMDZ/DefLists/file_def_histins_lmdz.xml, . ),   \
+        (${MODIPSL}/modeles/LMDZ/DefLists/file_def_histstrataer_lmdz.xml, . ),\
+        (${MODIPSL}/modeles/LMDZ/DefLists/file_def_histdaystrataer_lmdz.xml, . ),\
+        (${MODIPSL}/modeles/LMDZ/DefLists/file_def_histLES_lmdz.xml, . )
+
+[RestartFiles]
+List=   (restart.nc, restart.nc, start.nc), \
+        (restartphy.nc, restartphy.nc,  startphy.nc)
+
+[OutputText]
+List=   (physiq.def, gcm.def, run.def, traceur.def, guide.def, config.def, vert.def, used_run.def, iodef.xml, context_lmdz.xml, field_def_lmdz.xml, file_def_*lmdz.xml, debug.01, lmdz.prt, out_lmdz.x.err, out_lmdz.x.out)
+
+[OutputFiles]
+List=   (histmth.nc,       ${R_OUT_ATM_O_M}/${PREFIX}_1M_histmth.nc,       Post_1M_histmth),       \
+        (guide_ins.nc,     ${R_OUT_ATM_O_M}/${PREFIX}_guide_ins.nc,        NONE),                  \
+        (histmthCOSP.nc,   ${R_OUT_ATM_O_M}/${PREFIX}_1M_histmthCOSP.nc,   NONE),                  \
+        (histmthNMC.nc,    ${R_OUT_ATM_O_M}/${PREFIX}_1M_histmthNMC.nc,    NONE),                  \
+        (histday.nc,       ${R_OUT_ATM_O_D}/${PREFIX}_1D_histday.nc,       NONE),                  \
+        (histdayCOSP.nc,   ${R_OUT_ATM_O_D}/${PREFIX}_1D_histdayCOSP.nc,   NONE),                  \
+        (histdayNMC.nc,    ${R_OUT_ATM_O_D}/${PREFIX}_1D_histdayNMC.nc,    NONE),                  \
+        (histhf.nc,        ${R_OUT_ATM_O_H}/${PREFIX}_HF_histhf.nc,        NONE),                  \
+        (histhfCOSP.nc,    ${R_OUT_ATM_O_H}/${PREFIX}_HF_histhfCOSP.nc,    NONE),                  \
+        (histhfNMC.nc,     ${R_OUT_ATM_O_H}/${PREFIX}_HF_histhfNMC.nc,     NONE),                  \
+        (histhf3h.nc,      ${R_OUT_ATM_O_H}/${PREFIX}_3H_histhf3h.nc,      NONE),                  \
+        (histhf3hm.nc,     ${R_OUT_ATM_O_H}/${PREFIX}_3H_histhf3hm.nc,     NONE)
+
+[Post_1M_histmth]
+Patches= ()
+GatherWithInternal = (lon, lat, presnivs, time_counter, time_centered, time_centered_bounds, aire)
+TimeSeriesVars2D = (bils, cldh, cldl, cldm, cldq, cldt, evap, flat, ftime_con, iwp, lwp, LWdnSFC, LWdnSFCclr, LWupSFC, LWupSFCclr, LWdn200, LWdn200clr, LWup200, LWup200clr, precip, prw, pluc, psol, q2m, rh2m, sens, sicf, slp, snow, soll0, soll, sols0, sols, SWdnSFC, SWupSFC, SWup200, SWdnTOA, SWupTOA, SWdn200, SWdnSFCclr, SWupSFCclr, SWupTOAclr, t2m, ave_t2m_daily_max, ave_t2m_daily_min, taux, taux_ter, taux_sic, taux_lic, taux_oce, tauy, tauy_ter, tauy_sic, tauy_lic, tauy_oce, lat_ter, lat_sic, lat_lic, lat_oce, nettop, pbase, ptop, topl0, topl, tops0, tops, topswad, topswai, tsol, tsol_ter, tsol_lic, tsol_oce, tsol_sic , u10m, u500, v10m, v500, w500, pourc_ter, pourc_oce, pourc_sic, pourc_lic, wind10m, od550aer, od550lt1aer, od550_STRAT, loadoa, loadbc, loadso4, loaddust, loadss, sconcoa, sconcbc, sconcso4, sconcdust, sconcss, reffclwtop, cldncl, swtoaas_ant, swtoacs_ant, swtoacf_ant, swsrfas_ant, swsrfcs_ant, swsrfcf_ant, swtoaas_nat, swtoacs_nat, swtoacf_nat, swsrfas_nat, swsrfcs_nat, swsrfcf_nat, solswai, solswad, swtoacf_zero, swsrfcf_zero, R_ecc, R_peri, R_incl, solaire, rsun1, co2_ppm, CH4_ppb, N2O_ppb, CFC11_ppt, CFC12_ppt, colO3_strat, colO3_trop)
+ChunckJob2D = 100Y 
+TimeSeriesVars3D = (upwd, lwcon, iwcon, lcc3dcon, lcc3dstra, temp, theta, ovap, ovapinit, geop, vitu, vitv, vitw, pres, rneb, rnebcon, rhum, mc, paprs, scdnc, ec550aer, concoa, concbc, concso4, concss, concdust, reffclws, reffclwc, tnt, dtdyn, dtphy, dtlschr, tntr, tntscpbl, tnhus, dqdyn, dqvdf, tnhusscpbl, dqphy, evu, mcd)
+ChunckJob3D = 100Y
+Seasonal=ON
+
+[Post_1M_histmthCOSP]
+Patches = ()
+GatherWithInternal = (lon, lat, pressure2, height, sza, time_counter, time_centered, time_centered_bounds, aire)
+TimeSeriesVars2D = (cllcalipso, clmcalipso, clhcalipso, cltcalipso, tclisccp, albisccp, ctpisccp)
+ChunckJob2D = OFF
+TimeSeriesVars3D = (clcalipso, clisccp2_c01, clisccp2_c02, clisccp2_c03, clisccp2_c04, clisccp2_c05, clisccp2_c06, clisccp2_c07, parasol_refl)
+ChunckJob3D = OFF
+Seasonal=OFF
+
+[Post_1M_histmthNMC]
+Patches = ()
+GatherWithInternal = (lon, lat, plev, time_counter, time_centered, time_centered_bounds)
+TimeSeriesVars2D = ()
+ChunckJob2D = NONE
+TimeSeriesVars3D = (ta, tro3, zg, hus, hur, ua, va, wap)
+ChunckJob3D = NONE
+Seasonal=ON
+
+[Post_1D_histday]
+Patches= ()
+GatherWithInternal = (lon, lat, presnivs, time_counter, time_centered, time_centered_bounds)
+TimeSeriesVars2D = (bils, cldh, cldl, cldm, cldq, cldt, evap, flat, precip, pluc, plul, prw, psol, q2m, sens, sicf, slp, soll, sols, snow, SWdnSFC, t2m, t2m_max, t2m_min, topl, tops, tsol, u10m, v10m, wind10m, wind10max)
+ChunckJob2D = 50Y
+TimeSeriesVars3D = (lwcon, iwcon, mc, rhum, rneb, temp, theta, ovap, geop, vitu, vitv, vitw, pres, paprs)
+ChunckJob3D = OFF
+Seasonal=OFF
+
+[Post_1D_histdayCOSP]
+Patches = ()
+GatherWithInternal = (lon, lat, pressure2, height, sza, time_counter, time_centered, time_centered_bounds)
+TimeSeriesVars2D = (cllcalipso, clmcalipso, clhcalipso, cltcalipso, tclisccp, albisccp, ctpisccp)
+ChunckJob2D = OFF
+TimeSeriesVars3D = (clcalipso, clisccp2_c01, clisccp2_c02, clisccp2_c03, clisccp2_c04, clisccp2_c05, clisccp2_c06, clisccp2_c07, parasol_refl)
+ChunckJob3D = OFF
+Seasonal=OFF
+
+[Post_1D_histdayNMC]
+Patches = ()
+GatherWithInternal = (lon, lat, plev, time_counter, time_centered, time_centered_bounds)
+TimeSeriesVars2D = ()
+ChunckJob2D = NONE
+TimeSeriesVars3D = (ta, zg, hus, hur, ua, va, wap)
+ChunckJob3D = 10Y
+Seasonal=OFF
+
+[Post_HF_histhf]
+Patches= ()
+GatherWithInternal = (lon, lat, presnivs, time_counter, time_centered, time_centered_bounds)
+TimeSeriesVars2D = (cldt, psol, q2m, slp, precip, pluc, plul, t2m, tsol, u10m, v10m)
+ChunckJob2D = 50Y
+TimeSeriesVars3D = (temp, theta, ovap, vitu, vitv)
+ChunckJob3D = OFF
+Seasonal=OFF
+
+[Post_HF_histhfCOSP]
+Patches = ()
+GatherWithInternal = (lon, lat, height, sza, time_counter, time_centered, time_centered_bounds)
+TimeSeriesVars2D = (cllcalipso, clmcalipso, clhcalipso, cltcalipso)
+ChunckJob2D = OFF
+TimeSeriesVars3D = (clcalipso, parasol_refl, cfad_lidarsr532_c01, cfad_lidarsr532_c02, cfad_lidarsr532_c03, cfad_lidarsr532_c04, cfad_lidarsr532_c05, cfad_lidarsr532_c06, cfad_lidarsr532_c07, cfad_lidarsr532_c08, cfad_lidarsr532_c09, cfad_lidarsr532_c10, cfad_lidarsr532_c11, cfad_lidarsr532_c12, cfad_lidarsr532_c13, cfad_lidarsr532_c14, cfad_lidarsr532_c15)
+ChunckJob3D = OFF
+Seasonal=OFF
+
+[Post_HF_histhfNMC]
+Patches = ()
+GatherWithInternal = (lon, lat, plev, time_counter, time_centered, time_centered_bounds)
+TimeSeriesVars2D = ()
+ChunckJob2D = NONE
+TimeSeriesVars3D = (ta, zg, hus, hur, ua, va, wap)
+ChunckJob3D = 10Y
+Seasonal=OFF
+
+[Post_3H_histhf3hm]
+Patches= ()
+GatherWithInternal = (lon, lat, presnivs, time_counter, time_centered, time_centered_bounds)
+TimeSeriesVars2D = (flat, precip, pluc, snow, topl, topl0, SWupTOA, SWupTOAclr, SWdnTOA, SWupSFC, SWupSFCclr, SWdnSFC, SWdnSFCclr, LWupSFC, LWupSFCclr, LWdnSFC, LWdnSFCclr, bils, bils_tke, bils_diss, bils_ec, bils_kinetic, bils_enthalp, bils_latent, sens, cldt, zmax_th)
+ChunckJob2D = OFF
+TimeSeriesVars3D = ()
+ChunckJob3D = OFF
+Seasonal=OFF
+
+[Post_3H_histhf3h]
+Patches= ()
+GatherWithInternal = (lon, lat, presnivs, time_counter, time_centered, time_centered_bounds)
+TimeSeriesVars2D = (phis, tsol, t2m, q2m, ustar, u10m, v10m, psol)
+ChunckJob2D = OFF
+TimeSeriesVars3D = ()
+ChunckJob3D = OFF
+Seasonal=OFF

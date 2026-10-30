@@ -1,0 +1,101 @@
+## level_coupling_esm : 0(pas d'echange de carbone), 2 (change entre LMDZ/CPL/NEMO et LMDZ/ORCHIDEE)
+level_coupling_esm=  _AUTO_: DEFAULT = 0
+## carbon_cycle_cpl: couplage des flux de carbone ATM/OCE, ATM/SRF
+carbon_cycle_cpl=_AUTO_ : DEFAULT=n
+## carbon_cycle_tr: transport atmospherique de CO2 dans LMDZ
+carbon_cycle_tr=_AUTO_ : DEFAULT=n
+## carbon_cycle_rad: utilisation de traceur CO2 dans le code radiatif
+carbon_cycle_rad=_AUTO_ : DEFAULT=n
+
+## read_fco2_ocean_cor : y/n flag d'activation de la correction du flux net de carbone (ocean) 
+read_fco2_ocean_cor=_AUTO_ : DEFAULT=n
+## var_fco2_ocean_cor : valeur de la correction du flux net de carbone (ocean) 
+var_fco2_ocean_cor=_AUTO_: DEFAULT = 0.2576
+## read_fco2_land_cor : y/n flag d'activation de la correction du flux net de carbone (land) 
+read_fco2_land_cor=_AUTO_ : DEFAULT=n
+## var_fco2_land_cor : valeur de la correction du flux net de carbone (land) 
+var_fco2_land_cor=_AUTO_: DEFAULT =-0.2036
+
+##  Cycle diurne  ou non                 
+iflag_cycle_diurne=1
+
+## Soil Model ou non
+soil_model=y
+
+## Pas de temps de couplage (s)
+t_coupl=_AUTO_
+
+## Nombre  d'appels des routines de rayonnements ( par jour)                 
+nbapp_rad=16
+
+##  Facteur additif pour l'albedo
+pmagic =  _AUTO_: DEFAULT = 0.0
+
+#
+# Parametres "orbitaux/ ere geologique"
+#
+### R_ecc =      Excentricite (lue dans Eccentricity.txt)
+R_ecc = _AUTO_: DEFAULT = 0.016715
+### R_peri =     Equinoxe (lue dans Perihelie.txt)
+R_peri = _AUTO_: DEFAULT = 102.7
+### R_incl =     Inclinaison (lue dans Obliquity.txt)
+R_incl = _AUTO_: DEFAULT = 23.441
+### solaire =    Constante solaire
+# solaire est modifie avec les valeurs du fichier SOLARANDVOLCANOES.txt
+# solaire parameter est utilise uniquement avec si iflag_rrtm=0 et ok_suntime_rrtm=n
+solaire = _AUTO_: DEFAULT = 0.0 
+### constante solaire lue dans un fichier par defaut
+ok_suntime_rrtm=y
+#
+# Taux gaz a effet de serre
+#
+### co2_ppm =    taux CO2 en ppm
+co2_ppm = _AUTO_
+# co2_ppm0 = taux initial du CO2 en ppm, l'année 1850 forcage CMIP6 (transport)
+co2_ppm0 = _AUTO_: DEFAULT  = 2.8432e+02
+### co2_ppm_per =    taux 4xCO2 en ppm (uniqument pour calcul des diags)
+co2_ppm_per = _AUTO_
+### CH4_ppb =    taux CH4 en ppb
+CH4_ppb = _AUTO_
+### N2O_ppb =    taux N2O en ppb
+N2O_ppb = _AUTO_
+### CFC11_ppt =  taux CFC11 en ppt
+CFC11_ppt = _AUTO_
+### CFC12_ppt =  taux CFC12 en ppt
+CFC12_ppt = _AUTO_
+#
+# Parametres effets directs/indirects des "aerosols"
+#
+### ok_ade=y/n   flag Aerosol direct effect
+ok_ade=_AUTO_
+### ok_aie=y/n   flag Aerosol indirect effect
+ok_aie=_AUTO_
+### aer_type =   Aerosol variation type : actuel / preind / scenario / annuel
+aer_type=annuel
+### aerosol coupling = online (y) or offline (n)
+aerosol_couple=_AUTO_
+### Ozone chemistry coupling = online (y) or offline (n)
+chemistry_couple=_AUTO_
+###  flag_aerosol = type of coupled aerosol, if aerosol offline 
+###  0 => no aerosol, 1 => sulfate only, 2 => bc only, 3 => pom only, 4 => seasalt only, 5 => dust only, 6 => all aerosol
+flag_aerosol=_AUTO_
+### ok_cdnc=y/n   Cloud droplet number concentration
+ok_cdnc=_AUTO_
+# ok_alw=y flag pour activer l effet LW des poussieres
+ok_alw=y
+#
+# Parametre de lecture de l'ozone
+#
+# Allowed values are 0, 1 and 2
+# 0: do not read an ozone climatology
+# 1: read a single ozone climatology that will be used day and night
+# 2: read two ozone climatologies, the average day and night climatology and the daylight climatology
+read_climoz=_AUTO_
+#
+# Aerosols stratospheriques utilises par defaut 
+flag_aerosol_strat=_AUTO_ : DEFAULT=2
+# Diag VolMIP to get volcanic aerosols effects instead of tropospheric ones
+ok_volcan=n
+#
+# COSP
+ok_cosp=_AUTO_

@@ -1,0 +1,54 @@
+#!/bin/ksh
+#-----------------------------------
+function PYC_Initialize
+{ 
+    IGCM_debug_PushStack "PYC_Initialize"
+
+    echo INITIALIZE PYC !!!
+    export PYTHONPATH=/ccc/work/cont003/gen1523/bargexis/modipsl/modeles/PYTHON/lmdz_wind_bc:$PYTHONPATH
+    echo lmdz_wind_bc PYTHONPATH : $PYTHONPATH
+
+    IGCM_debug_PopStack "PYC_Initialize"
+}
+
+#-----------------------------------
+function PYC_Update
+{
+    IGCM_debug_PushStack "PYC_Update"
+
+    echo UPDATE PYC !!!
+
+    EXE_DIR=$(pwd)
+
+    # Clean
+    touch ${EXE_DIR}/namcouple
+    touch ${EXE_DIR}/eophis_nml
+    rm ${EXE_DIR}/namcouple*
+    rm ${EXE_DIR}/eophis_nml
+
+    # Generate coupling files
+    PYC_EXE=${config_Executable_PYC[1]}
+    echo "Running python3 ./${PYC_EXE} --exec preprod"
+    ccc_mprun -n 1 python3 ./${PYC_EXE} --exec preprod
+
+    # Update run_file for python execution
+    PYC_EXE_FILE=script_${PYC_EXE}.ksh
+    sed -i 's|^\./|python3 ./|' "$PYC_EXE_FILE"
+    sed -i "s|^\(.*\)\./${PYC_EXE}\$|\1python3 ./${PYC_EXE}|" run_file
+
+    # Store preproduction files
+    mv eophis.out eophis_preprod.out
+    mv eophis.err eophis_preprod.err
+    
+    IGCM_debug_PopStack "PYC_Update"
+}
+
+#-----------------------------------
+function IOS_Finalize
+{
+    IGCM_debug_PushStack "PYC_Finalize"
+
+    echo FINALIZE PYC !!!
+
+    IGCM_debug_PopStack "PYC_Finalize"
+}

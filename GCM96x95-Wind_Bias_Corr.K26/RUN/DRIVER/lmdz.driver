@@ -1,0 +1,621 @@
+#!/bin/ksh
+#-----------------------------------------------------------------
+function ATM_Initialize
+{
+    IGCM_debug_PushStack "ATM_Initialize"
+
+    # Read the resolution from the variables ResolAtm set in config.card UserChoices section or from .resol file
+    if [ X$ResolAtm != X ] ; then
+	# ResolAtm is set in config.card
+	RESOL_ATM_3D=${ResolAtm}
+    elif [ -f ${SUBMIT_DIR}/../.resol ] ; then
+	# ResolAtm was not set in config.card, try to read .resol file
+	eval $(grep RESOL_ATM_3D ${SUBMIT_DIR}/../.resol) || RESOL_ATM_3D=96x95x39
+    else
+	IGCM_debug_Exit "ResolAtm is not set in config.card and the .resol file does not exist."
+	IGCM_debug_Verif_Exit
+    fi
+    
+    IGCM_debug_Print 1 "The atomsopheric resolution is ${RESOL_ATM_3D} " 
+
+    RESOL_ATM_Z=$( echo ${RESOL_ATM_3D} | awk "-Fx" '{print $3}' )
+    RESOL_ATM_X=$( echo ${RESOL_ATM_3D} | awk "-Fx" '{print $1}' )
+    RESOL_ATM_Y=$( echo ${RESOL_ATM_3D} | awk "-Fx" '{print $2}' )
+    RESOL_ATM_XY="${RESOL_ATM_X}x${RESOL_ATM_Y}"
+    RESOL_ATM=LMD${RESOL_ATM_X}${RESOL_ATM_Y}
+
+    ##- LMDZ physics version
+    ##  Read LMDZ_Physics option in lmdz.card, if not present take default value AP (old physics) 
+    if [ ! X${lmdz_UserChoices_LMDZ_Physics} = X ] ; then
+	LMDZ_Physics=${lmdz_UserChoices_LMDZ_Physics}
+    else
+	LMDZ_Physics=AP
+    fi
+    echo LMDZ physics version : ${LMDZ_Physics}
+
+    ##- Create_etat0_limit version
+    ##  Define variable CREATE only if it is set in lmdz.card section UserChoices.
+    ##  This variable is only used in lmdz.card to choose input files.
+    if [ ! X${lmdz_UserChoices_CREATE} = X ] ; then
+	IGCM_card_DefineVariableFromOption ${SUBMIT_DIR}/COMP/lmdz.card UserChoices CREATE
+	CREATE=${lmdz_UserChoices_CREATE}
+	echo create_etat0_limit version : ${CREATE}
+    fi
+
+
+    ## - LMDZ choice of config.def file
+    ##   ConfType must be set in lmdz.card
+    ConfType=${lmdz_UserChoices_ConfType}
+
+    IGCM_debug_PopStack "ATM_Initialize"
+}
+
+#-----------------------------------------------------------------
+function ATM_Update
+{
+    IGCM_debug_PushStack "ATM_Update"
+
+    ##-- GHG forcing :
+    ##   If forcing file exist in run directory, read values for the current year 
+    ##   and set in config.def. If not use the default value set in config.def
+
+    # Read value for solaire from file SOLARANDVOLCANOES.txt. If file not existing, take DEFAULT value from file. 
+    IGCM_debug_Print 1 "Note that the solaire parameter is here below changed but it is only used by LMDZ for old physics(AP and NPv3.2)"
+    IGCM_debug_Print 1 "For newer physics with iflag_rrtm=1 and ok_suntime_rrtm=y, the solar constant is instead taken from solarforcing.nc file"
+    if [ -f SOLARANDVOLCANOES.txt ] ; then
+	value=`grep Annee_${year} SOLARANDVOLCANOES.txt | awk -F= '{print $2}'`
+	if [ X"${value}" = X ] ; then
+	    # The grep returned empty variable, stop execution
+	    IGCM_debug_Exit "The file SOLARANDVOLCANOES.txt do not contain the current year."
+	    IGCM_debug_Verif_Exit
+	fi
+    else
+	value=DEFAULT
+    fi
+    IGCM_comp_modifyDefFile nonblocker config.def solaire $value
+
+    # Read value for eccentricity from file Eccentricity.txt. If file not existing, take DEFAULT value from file.
+    if [ -f Eccentricity.txt ] ; then
+	value=`grep Annee_${year} Eccentricity.txt | awk -F= '{print $2}'`
+	if [ X"${value}" = X ] ; then
+	    # The grep returned empty variable, stop execution
+	    IGCM_debug_Exit "The file Eccentricity.txt do not contain the current year."
+	    IGCM_debug_Verif_Exit
+	fi
+    else
+	value=DEFAULT
+    fi
+    IGCM_comp_modifyDefFile nonblocker config.def R_ecc $value
+
+    # Read value for obliquity from file Obliquity.txt. If file not existing, take DEFAULT value from file.
+    if [ -f Obliquity.txt ] ; then
+	value=`grep Annee_${year} Obliquity.txt | awk -F= '{print $2}'`
+	if [ X"${value}" = X ] ; then
+	    # The grep returned empty variable, stop execution
+	    IGCM_debug_Exit "The file Obliquity.txt do not contain the current year."
+	    IGCM_debug_Verif_Exit
+	fi
+    else
+	value=DEFAULT
+    fi
+    IGCM_comp_modifyDefFile nonblocker config.def R_incl $value
+
+    # Read value for perihelie from file Perihelie.txt. If file not existing, take DEFAULT value from file.
+    if [ -f Perihelie.txt ] ; then
+	value=`grep Annee_${year} Perihelie.txt | awk -F= '{print $2}'`
+	if [ X"${value}" = X ] ; then
+	    # The grep returned empty variable, stop execution
+	    IGCM_debug_Exit "The file Perihelie.txt do not contain the current year."
+	    IGCM_debug_Verif_Exit
+	fi
+    else
+	value=DEFAULT
+    fi
+    IGCM_comp_modifyDefFile nonblocker config.def R_peri $value
+
+    # Read value for co2_ppm from file CO2.txt. If file not existing, take DEFAULT value from file. 
+    # Calculate co2_ppm_per as co2_ppm*4.
+    if [ -f CO2.txt ] ; then
+       	value=`grep Annee_${year} CO2.txt | awk -F= '{print $2}'`
+	if [ X"${value}" = X ] ; then
+	    # The grep returned empty variable, stop execution
+	    IGCM_debug_Exit "The file CO2.txt do not contain the current year."
+	    IGCM_debug_Verif_Exit
+	fi
+	value4=`grep Annee_${year} CO2.txt | awk -F= '{print $2 * 4}'`
+    else
+	value=DEFAULT
+	value4=DEFAULT
+    fi
+    IGCM_comp_modifyDefFile nonblocker config.def co2_ppm $value
+    IGCM_comp_modifyDefFile nonblocker config.def co2_ppm_per $value4
+
+
+    # Read value for CH4_ppb from file CH4.txt. If file not existing, take DEFAULT value from file. 
+    if [ -f CH4.txt ] ; then
+	value=`grep Annee_${year} CH4.txt | awk -F= '{print $2}'`
+	if [ X"${value}" = X ] ; then
+	    # The grep returned empty variable, stop execution
+	    IGCM_debug_Exit "The file CH4.txt do not contain the current year."
+	    IGCM_debug_Verif_Exit
+	fi
+    else
+	value=DEFAULT
+    fi
+    IGCM_comp_modifyDefFile nonblocker config.def CH4_ppb $value
+
+
+    # Read value for N2O_ppb from file N2O.txt. If file not existing, take DEFAULT value from file. 
+    if [ -f N2O.txt ] ; then
+	value=`grep Annee_${year} N2O.txt | awk -F= '{print $2}'`
+	if [ X"${value}" = X ] ; then
+	    # The grep returned empty variable, stop execution
+	    IGCM_debug_Exit "The file N2O.txt do not contain the current year."
+	    IGCM_debug_Verif_Exit
+	fi
+    else
+	value=DEFAULT
+    fi
+    IGCM_comp_modifyDefFile nonblocker config.def N2O_ppb $value
+
+    # Read value for CFC11_ppt from file CFC11.txt. If file not existing, take DEFAULT value from file. 
+    if [ -f CFC11.txt ] ; then
+	value=`grep Annee_${year} CFC11.txt | awk -F= '{print $2}'`
+	if [ X"${value}" = X ] ; then
+	    # The grep returned empty variable, stop execution
+	    IGCM_debug_Exit "The file CFC11.txt do not contain the current year."
+	    IGCM_debug_Verif_Exit
+	fi
+    else
+	value=DEFAULT
+    fi
+    IGCM_comp_modifyDefFile nonblocker config.def CFC11_ppt $value
+
+
+    # Read value for CFC12_ppt from file CFC12.txt. If file not existing, take DEFAULT value from file. 
+    if [ -f CFC12.txt ] ; then
+	value=`grep Annee_${year} CFC12.txt | awk -F= '{print $2}'`
+	if [ X"${value}" = X ] ; then
+	    # The grep returned empty variable, stop execution
+	    IGCM_debug_Exit "The file CFC12.txt do not contain the current year."
+	    IGCM_debug_Verif_Exit
+	fi
+    else
+	value=DEFAULT
+    fi
+    IGCM_comp_modifyDefFile nonblocker config.def CFC12_ppt $value
+
+
+    ## Coupling Time Step : Take value of FreqCoupling set in oasis.card or if it is not set, take default value 86400
+    LMDZ_t_coupl=${oasis_UserChoices_FreqCoupling:-86400}
+    IGCM_debug_Print 3 "LMDZ_t_coupl "   ${LMDZ_t_coupl}
+    IGCM_comp_modifyDefFile nonblocker config.def t_coupl   ${LMDZ_t_coupl} 
+
+
+
+    ## Activate diagnostic output files and set output_level for each file
+
+    # histmth
+    if [ X${lmdz_UserChoices_output_level_histmth} = X ] || [ X${lmdz_UserChoices_output_level_histmth} = XNONE ] ; then
+	IGCM_comp_modifyXmlFile nonblocker file_def_histmth_lmdz.xml histmth enabled FALSE
+	IGCM_comp_modifyXmlFile nonblocker file_def_histmth_lmdz.xml histmth output_level 0
+    else
+	IGCM_comp_modifyXmlFile nonblocker file_def_histmth_lmdz.xml histmth enabled TRUE
+	IGCM_comp_modifyXmlFile nonblocker file_def_histmth_lmdz.xml histmth output_level ${lmdz_UserChoices_output_level_histmth} 
+    fi
+
+    # histday
+    if [ X${lmdz_UserChoices_output_level_histday} = X ] || [ X${lmdz_UserChoices_output_level_histday} = XNONE ] ; then
+	IGCM_comp_modifyXmlFile nonblocker file_def_histday_lmdz.xml histday enabled FALSE
+	IGCM_comp_modifyXmlFile nonblocker file_def_histday_lmdz.xml histday output_level 0
+    else
+	IGCM_comp_modifyXmlFile nonblocker file_def_histday_lmdz.xml histday enabled TRUE
+	IGCM_comp_modifyXmlFile nonblocker file_def_histday_lmdz.xml histday output_level ${lmdz_UserChoices_output_level_histday} 
+    fi
+
+    # histhf
+    if [ X${lmdz_UserChoices_output_level_histhf} = X ] || [ X${lmdz_UserChoices_output_level_histhf} = XNONE ] ; then
+	IGCM_comp_modifyXmlFile nonblocker file_def_histhf_lmdz.xml histhf enabled FALSE
+	IGCM_comp_modifyXmlFile nonblocker file_def_histhf_lmdz.xml histhf output_level 0
+    else
+	IGCM_comp_modifyXmlFile nonblocker file_def_histhf_lmdz.xml histhf enabled TRUE
+	IGCM_comp_modifyXmlFile nonblocker file_def_histhf_lmdz.xml histhf output_level ${lmdz_UserChoices_output_level_histhf} 
+    fi
+
+    # histmthNMC
+    if [ X${lmdz_UserChoices_output_level_histmthNMC} = X ] || [ X${lmdz_UserChoices_output_level_histmthNMC} = XNONE ] ; then
+	IGCM_comp_modifyXmlFile nonblocker file_def_histmthNMC_lmdz.xml histmthNMC enabled FALSE
+	IGCM_comp_modifyXmlFile nonblocker file_def_histmthNMC_lmdz.xml histmthNMC output_level 0
+    else
+	IGCM_comp_modifyXmlFile nonblocker file_def_histmthNMC_lmdz.xml histmthNMC enabled TRUE
+	IGCM_comp_modifyXmlFile nonblocker file_def_histmthNMC_lmdz.xml histmthNMC output_level ${lmdz_UserChoices_output_level_histmthNMC} 
+    fi
+
+    # histdayNMC
+    if [ X${lmdz_UserChoices_output_level_histdayNMC} = X ] || [ X${lmdz_UserChoices_output_level_histdayNMC} = XNONE ] ; then
+	IGCM_comp_modifyXmlFile nonblocker file_def_histdayNMC_lmdz.xml histdayNMC enabled FALSE
+	IGCM_comp_modifyXmlFile nonblocker file_def_histdayNMC_lmdz.xml histdayNMC output_level 0
+    else
+	IGCM_comp_modifyXmlFile nonblocker file_def_histdayNMC_lmdz.xml histdayNMC enabled TRUE
+	IGCM_comp_modifyXmlFile nonblocker file_def_histdayNMC_lmdz.xml histdayNMC output_level ${lmdz_UserChoices_output_level_histdayNMC} 
+    fi
+
+    # histhfNMC
+    if [ X${lmdz_UserChoices_output_level_histhfNMC} = X ] || [ X${lmdz_UserChoices_output_level_histhfNMC} = XNONE ] ; then
+	IGCM_comp_modifyXmlFile nonblocker file_def_histhfNMC_lmdz.xml histhfNMC enabled FALSE
+	IGCM_comp_modifyXmlFile nonblocker file_def_histhfNMC_lmdz.xml histhfNMC output_level 0
+    else
+	IGCM_comp_modifyXmlFile nonblocker file_def_histhfNMC_lmdz.xml histhfNMC enabled TRUE
+	IGCM_comp_modifyXmlFile nonblocker file_def_histhfNMC_lmdz.xml histhfNMC output_level ${lmdz_UserChoices_output_level_histhfNMC} 
+    fi
+
+    # histstrataer
+    if [ X${lmdz_UserChoices_output_level_histstrataer} = X ] || [ X${lmdz_UserChoices_output_level_histstrataer} = XNONE ] ; then
+	IGCM_comp_modifyXmlFile nonblocker file_def_histstrataer_lmdz.xml histstrataer enabled FALSE
+	IGCM_comp_modifyXmlFile nonblocker file_def_histstrataer_lmdz.xml histstrataer output_level 0
+    else
+	IGCM_comp_modifyXmlFile nonblocker file_def_histstrataer_lmdz.xml histstrataer enabled TRUE
+	IGCM_comp_modifyXmlFile nonblocker file_def_histstrataer_lmdz.xml histstrataer output_level ${lmdz_UserChoices_output_level_histstrataer} 
+    fi
+
+    # histdaystrataer
+    if [ X${lmdz_UserChoices_output_level_histdaystrataer} = X ] || [ X${lmdz_UserChoices_output_level_histdaystrataer} = XNONE ] ; then
+	IGCM_comp_modifyXmlFile nonblocker file_def_histdaystrataer_lmdz.xml histdaystrataer enabled FALSE
+	IGCM_comp_modifyXmlFile nonblocker file_def_histdaystrataer_lmdz.xml histdaystrataer output_level 0
+    else
+	IGCM_comp_modifyXmlFile nonblocker file_def_histdaystrataer_lmdz.xml histdaystrataer enabled TRUE
+	IGCM_comp_modifyXmlFile nonblocker file_def_histdaystrataer_lmdz.xml histdaystrataer output_level ${lmdz_UserChoices_output_level_histdaystrataer}
+    fi
+
+    # histstn
+    if [ X${lmdz_UserChoices_output_level_histstn} = X ] || [ X${lmdz_UserChoices_output_level_histstn} = XNONE ] ; then
+	IGCM_comp_modifyXmlFile nonblocker file_def_histstn_lmdz.xml histstn enabled FALSE
+	IGCM_comp_modifyXmlFile nonblocker file_def_histstn_lmdz.xml histstn output_level 0
+    else
+	IGCM_comp_modifyXmlFile nonblocker file_def_histstn_lmdz.xml histstn enabled TRUE
+	IGCM_comp_modifyXmlFile nonblocker file_def_histstn_lmdz.xml histstn output_level ${lmdz_UserChoices_output_level_histstn} 
+    fi
+
+
+    # histmthCOSP
+    if [ X${lmdz_UserChoices_output_level_histmthCOSP} = X ] || [ X${lmdz_UserChoices_output_level_histmthCOSP} = XNONE ] ; then
+	IGCM_comp_modifyXmlFile nonblocker file_def_histmthCOSP_lmdz.xml histmthCOSP enabled FALSE
+	IGCM_comp_modifyXmlFile nonblocker file_def_histmthCOSP_lmdz.xml histmthCOSP output_level 0
+    else
+	IGCM_comp_modifyXmlFile nonblocker file_def_histmthCOSP_lmdz.xml histmthCOSP enabled TRUE
+	IGCM_comp_modifyXmlFile nonblocker file_def_histmthCOSP_lmdz.xml histmthCOSP output_level ${lmdz_UserChoices_output_level_histmthCOSP} 
+    fi
+
+
+    # histdayCOSP
+    if [ X${lmdz_UserChoices_output_level_histdayCOSP} = X ] || [ X${lmdz_UserChoices_output_level_histdayCOSP} = XNONE ] ; then
+	IGCM_comp_modifyXmlFile nonblocker file_def_histdayCOSP_lmdz.xml histdayCOSP enabled FALSE
+	IGCM_comp_modifyXmlFile nonblocker file_def_histdayCOSP_lmdz.xml histdayCOSP output_level 0
+    else
+	IGCM_comp_modifyXmlFile nonblocker file_def_histdayCOSP_lmdz.xml histdayCOSP enabled TRUE
+	IGCM_comp_modifyXmlFile nonblocker file_def_histdayCOSP_lmdz.xml histdayCOSP output_level ${lmdz_UserChoices_output_level_histdayCOSP} 
+    fi
+
+
+    # histhfCOSP
+    if [ X${lmdz_UserChoices_output_level_histhfCOSP} = X ] || [ X${lmdz_UserChoices_output_level_histhfCOSP} = XNONE ] ; then
+	IGCM_comp_modifyXmlFile nonblocker file_def_histhfCOSP_lmdz.xml histhfCOSP enabled FALSE
+	IGCM_comp_modifyXmlFile nonblocker file_def_histhfCOSP_lmdz.xml histhfCOSP output_level 0
+    else
+	IGCM_comp_modifyXmlFile nonblocker file_def_histhfCOSP_lmdz.xml histhfCOSP enabled TRUE
+	IGCM_comp_modifyXmlFile nonblocker file_def_histhfCOSP_lmdz.xml histhfCOSP output_level ${lmdz_UserChoices_output_level_histhfCOSP} 
+    fi
+
+
+    ## run.def parameters
+
+
+    ##-- Remise ou non a zero de la date initiale de LMDZ pour le fichier run.def
+    if [ ${CumulPeriod} -eq 1 ] ; then
+	IGCM_comp_modifyDefFile blocker run.def raz_date  1
+    else
+	IGCM_comp_modifyDefFile blocker run.def raz_date  0
+    fi
+
+    ##-- Calendar type for LMDZ and create_etat0_limit
+    case ${config_UserChoices_CalendarType} in
+        leap|gregorian)
+	    IGCM_comp_modifyDefFile blocker run.def calend  gregorian ;;
+        noleap)
+	    IGCM_comp_modifyDefFile blocker run.def calend  earth_365d ;;
+        360d)
+	    IGCM_comp_modifyDefFile blocker run.def calend  earth_360d ;;
+        *)
+	    IGCM_comp_modifyDefFile blocker run.def calend  earth_360d ;;
+    esac
+
+    IGCM_comp_modifyDefFile blocker run.def dayref    ${InitDay}
+    IGCM_comp_modifyDefFile blocker run.def nday      ${PeriodLengthInDays}
+
+    # Set anneeref different for gcm and ce0l
+    # Test if executable create_etat0_limit is present and lmdz.x is not present
+    if [ -f create_etat0_limit* ] || [ -f ce0l* ] && [ ! -f lmdz.x ] ; then
+	# for case ce0l : always take current year
+	IGCM_comp_modifyDefFile blocker run.def anneeref ${year}
+
+        # Temporary, set use_filtre_fft=n because we now use dyn3d for ce0l version where fft is not implemented. 
+        # In more recent versions of LMDZ, this will not be needed. 
+	IGCM_comp_modifyDefFile force   run.def use_filtre_fft n
+    else
+	# for case gcm : take first year of simulation
+	IGCM_comp_modifyDefFile blocker run.def anneeref ${InitYear}
+    fi
+
+    ## Determine from the variable ListOfComponents in config.card coupling to external models 
+    ## and set corresponding parameters in run.def
+    echo ListOfComponents now running : ${config_ListOfComponents[*]}
+
+    if [ X${config_ListOfComponents_SRF} = Xorchidee ] ; then
+	echo "Activate ORCHIDEE, set VEGET=y in run.def"
+	IGCM_comp_modifyDefFile blocker run.def VEGET y
+    else
+	echo "No ORCHIDEE, set VEGET=n in run.def"
+	IGCM_comp_modifyDefFile blocker run.def VEGET n
+    fi
+
+    if [ X${config_ListOfComponents_CPL} = Xoasis ] ; then
+	echo "Activate coupling to ocean, set type_ocean=couple in run.def"
+	IGCM_comp_modifyDefFile blocker run.def type_ocean couple
+    else
+	echo "LMDZ is running in forced mode without ocean model, set type_ocean=force in run.def"
+	IGCM_comp_modifyDefFile nonblocker run.def type_ocean force
+    fi
+
+    if [ X${config_UserChoices_ConfigType} = XESMCO2AER ] ; then
+    echo "ESM config, with INCA and CO2i, set type_trac=inco in run.def"
+    IGCM_comp_modifyDefFile blocker run.def type_trac inco
+    IGCM_comp_modifyDefFile blocker run.def iflag_phytrac 1
+    elif [ X${config_ListOfComponents_CHM} = Xinca ] ; then
+	echo "Activate coupling to INCA, set type_trac=inca in run.def"
+	IGCM_comp_modifyDefFile blocker run.def type_trac inca
+	IGCM_comp_modifyDefFile blocker run.def iflag_phytrac 1  
+    elif [ X${config_ListOfComponents_CHM} = Xreprobus ] ; then
+	echo "Activate coupling to REPROBUS, set type_trac=repr in run.def"
+	IGCM_comp_modifyDefFile blocker run.def type_trac repr
+        IGCM_comp_modifyDefFile blocker run.def config_inca none
+	IGCM_comp_modifyDefFile blocker run.def iflag_phytrac 1  
+    elif [ X${config_UserChoices_ConfigType} = XESMCO2 ] ; then 
+	echo "ESM config, set type_trac=co2i in run.def"
+	IGCM_comp_modifyDefFile blocker run.def type_trac co2i
+        IGCM_comp_modifyDefFile blocker run.def config_inca none
+    IGCM_comp_modifyDefFile blocker run.def iflag_phytrac 1 
+    elif [ X${lmdz_UserChoices_LMDZ_strataero} = Xy ] ; then
+        echo "No coupling to chemistry model but it is a LMDZ STRATAER configuration, set type_trac=coag in run.def"
+        IGCM_comp_modifyDefFile blocker run.def type_trac coag
+        IGCM_comp_modifyDefFile blocker run.def config_inca none
+	IGCM_comp_modifyDefFile blocker run.def iflag_phytrac 1  
+    else
+	echo "No coupling to chemistry model, set type_trac=lmdz in run.def"
+	IGCM_comp_modifyDefFile blocker run.def type_trac lmdz
+        IGCM_comp_modifyDefFile blocker run.def config_inca none
+	IGCM_comp_modifyDefFile blocker run.def iflag_phytrac 0
+    fi
+
+    # run.def : Activate the new calving 
+    if [ ! X${lmdz_UserChoices_cpl_old_calving} = X ]; then 
+	IGCM_comp_modifyDefFile nonblocker run.def cpl_old_calving ${lmdz_UserChoices_cpl_old_calving}
+    else
+	IGCM_comp_modifyDefFile nonblocker run.def cpl_old_calving y
+    fi 
+
+    # physiq.def : Activate the call to phytrac 
+    if [ ! X${lmdz_UserChoices_ok_bug_cv_trac} = X ]; then 
+	IGCM_comp_modifyDefFile nonblocker physiq.def ok_bug_cv_trac  ${lmdz_UserChoices_ok_bug_cv_trac}
+    else
+	IGCM_comp_modifyDefFile nonblocker physiq.def ok_bug_cv_trac  n
+    fi 
+
+    # config.def : Activate aerosol strato 
+    if [ ! X${lmdz_UserChoices_flag_aerosol_strat} = X ]; then 
+	IGCM_comp_modifyDefFile nonblocker config.def flag_aerosol_strat ${lmdz_UserChoices_flag_aerosol_strat}
+    else
+	IGCM_comp_modifyDefFile nonblocker config.def flag_aerosol_strat DEFAULT
+    fi 
+
+    # config.def : Activate direct radiative effect if ok_ade=y
+    if [ ! X${lmdz_UserChoices_ok_ade} = X ]; then 
+	IGCM_comp_modifyDefFile nonblocker config.def ok_ade ${lmdz_UserChoices_ok_ade}
+    else
+	IGCM_comp_modifyDefFile nonblocker config.def ok_ade n
+    fi 
+
+    # config.def : Activate indirect radiative effect if ok_aie=y
+    if [ ! X${lmdz_UserChoices_ok_aie} = X ]; then 
+	IGCM_comp_modifyDefFile nonblocker config.def ok_aie ${lmdz_UserChoices_ok_aie}
+    else
+	IGCM_comp_modifyDefFile nonblocker config.def ok_aie n
+    fi 
+
+    # config.def : Activate online aerosol coupled model if aerosol_couple=y
+    if [ ! X${lmdz_UserChoices_aerosol_couple} = X ]; then 
+	IGCM_comp_modifyDefFile nonblocker config.def aerosol_couple ${lmdz_UserChoices_aerosol_couple}
+    else
+	IGCM_comp_modifyDefFile nonblocker config.def aerosol_couple n
+    fi 
+
+    # config.def : Activate online Ozone chemistry coupled model if chemistry_couple=y
+    if [ ! X${lmdz_UserChoices_chemistry_couple} = X ]; then 
+	IGCM_comp_modifyDefFile nonblocker config.def chemistry_couple ${lmdz_UserChoices_chemistry_couple}
+    else
+	IGCM_comp_modifyDefFile nonblocker config.def chemistry_couple n
+    fi 
+
+    # config.def : Activate reading of ozone in climatology if read_climoz=2
+    if [ ! X${lmdz_UserChoices_read_climoz} = X ]; then 
+	IGCM_comp_modifyDefFile nonblocker config.def read_climoz ${lmdz_UserChoices_read_climoz}
+    else
+	IGCM_comp_modifyDefFile nonblocker config.def read_climoz 0	
+    fi 
+
+    # config.def : Choose aerosol use in radiative effect 
+    #  type of coupled aerosol =1 (default) =2 => bc  only =3 => pom only =4 => seasalt only 
+    # =5 => dust only =6 => all aerosol    
+    if [ ! X${lmdz_UserChoices_flag_aerosol} = X ]; then 
+	IGCM_comp_modifyDefFile nonblocker config.def flag_aerosol ${lmdz_UserChoices_flag_aerosol}
+    else
+	IGCM_comp_modifyDefFile nonblocker config.def flag_aerosol 0
+    fi 
+
+    # config.def : Activate calcul of Cloud droplet number concentration if ok_cdnc=y
+    if [ ! X${lmdz_UserChoices_ok_cdnc} = X ]; then 
+	IGCM_comp_modifyDefFile nonblocker config.def ok_cdnc ${lmdz_UserChoices_ok_cdnc}
+    else
+	IGCM_comp_modifyDefFile nonblocker config.def ok_cdnc n	
+    fi 
+
+    # config.def : Activate COSP
+    if [ ! X${lmdz_UserChoices_LMDZ_COSP_OK} = X ]; then 
+	IGCM_comp_modifyDefFile nonblocker config.def ok_cosp ${lmdz_UserChoices_LMDZ_COSP_OK}
+    else
+	IGCM_comp_modifyDefFile nonblocker config.def ok_cosp n	
+    fi 
+
+    # config.def : Modify parameter pmagic if it is set in lmdz.card
+    if [ ! X${lmdz_UserChoices_pmagic} = X ]; then 
+	IGCM_comp_modifyDefFile nonblocker config.def pmagic ${lmdz_UserChoices_pmagic}
+    else
+	# Take default value set in config.def
+	IGCM_comp_modifyDefFile nonblocker config.def pmagic DEFAULT
+    fi 
+
+    if ( [ X${config_UserChoices_ConfigType} = XESMCO2 ] || [ X${config_UserChoices_ConfigType} = XESMCO2AER ] ) ; then
+	# Set carbon cycle parameters according to parmeters in lmdz.card 
+	IGCM_comp_modifyDefFile blocker config.def level_coupling_esm 2 
+	IGCM_comp_modifyDefFile blocker config.def carbon_cycle_cpl ${lmdz_UserChoices_carbon_cycle_cpl} 
+	IGCM_comp_modifyDefFile blocker config.def carbon_cycle_tr ${lmdz_UserChoices_carbon_cycle_tr}
+	IGCM_comp_modifyDefFile blocker config.def carbon_cycle_rad ${lmdz_UserChoices_carbon_cycle_rad}
+	IGCM_comp_modifyDefFile nonblocker config.def co2_ppm0 ${lmdz_UserChoices_co2_ppm0} 
+    else
+	# Take default value set in config.def
+	IGCM_comp_modifyDefFile nonblocker config.def level_coupling_esm DEFAULT
+	IGCM_comp_modifyDefFile nonblocker config.def carbon_cycle_cpl DEFAULT 
+	IGCM_comp_modifyDefFile nonblocker config.def carbon_cycle_tr DEFAULT
+	IGCM_comp_modifyDefFile nonblocker config.def carbon_cycle_rad DEFAULT
+	IGCM_comp_modifyDefFile nonblocker config.def co2_ppm0 DEFAULT
+    fi
+
+    if ( [ X${config_UserChoices_ConfigType} = XESMCO2 ] ) ; then
+	# Set carbon cycle parameters according to parmeters in lmdz.card 
+	IGCM_comp_modifyDefFile nonblocker config.def read_fco2_ocean_cor ${lmdz_UserChoices_read_fco2_ocean_cor}
+	IGCM_comp_modifyDefFile nonblocker config.def var_fco2_ocean_cor ${lmdz_UserChoices_var_fco2_ocean_cor}
+	IGCM_comp_modifyDefFile nonblocker config.def read_fco2_land_cor ${lmdz_UserChoices_read_fco2_land_cor}
+	IGCM_comp_modifyDefFile nonblocker config.def var_fco2_land_cor ${lmdz_UserChoices_var_fco2_land_cor}
+    else
+	IGCM_comp_modifyDefFile nonblocker config.def read_fco2_ocean_cor DEFAULT
+	IGCM_comp_modifyDefFile nonblocker config.def var_fco2_ocean_cor DEFAULT
+	IGCM_comp_modifyDefFile nonblocker config.def read_fco2_land_cor DEFAULT
+	IGCM_comp_modifyDefFile nonblocker config.def var_fco2_land_cor DEFAULT
+    fi
+
+    # config.def : Modify parameter ok_volcan if ok_volcan=y or LMDZ_strataero=y in lmdz.card
+    # Note: ok_volcan is a flag allowing a double-call with/without natural forcing (instead of with/without anthro forcing).
+    if [ ! X${lmdz_UserChoices_ok_volcan} = X ] || [ X${lmdz_UserChoices_LMDZ_strataero} = Xy ] ; then
+	IGCM_comp_modifyDefFile nonblocker config.def ok_volcan ${lmdz_UserChoices_ok_volcan}
+    else
+	# Take default value set in config.def
+	IGCM_comp_modifyDefFile nonblocker config.def ok_volcan DEFAULT
+    fi
+
+    # physiq.def : Modify parameter tau_gl if it is set in lmdz.card
+    if [ ! X${lmdz_UserChoices_tau_gl} = X ]; then 
+	IGCM_comp_modifyDefFile nonblocker physiq.def tau_gl ${lmdz_UserChoices_tau_gl}
+    else
+	# Take default value set in physiq.def
+	IGCM_comp_modifyDefFile nonblocker physiq.def tau_gl DEFAULT
+    fi
+   
+
+    # guide.def : Activate nudging if ok_guide=y set in lmdz.card
+    if [ ! X${lmdz_UserChoices_ok_guide} = X ] ; then
+	IGCM_comp_modifyDefFile nonblocker guide.def ok_guide  ${lmdz_UserChoices_ok_guide}
+    else
+	IGCM_comp_modifyDefFile nonblocker guide.def ok_guide n
+    fi
+
+
+    ## Read ByPass_hgardfou_teta option in lmdz.card --> divide teta* by 2 if [ $ByPass_hgardfou_teta = 1 ]
+    ByPass_hgardfou_teta=${lmdz_UserChoices_ByPass_hgardfou_teta}
+    if [ X"${ByPass_hgardfou_teta}" = X"y" ] ; then
+	awk '{ if ($0 ~ /^teta.*=/) {split($0,a,"=") ; print a[1]"="a[2]/2"."} else print $0}' gcm.def > gcm.def.tmp
+	IGCM_sys_Mv gcm.def.tmp gcm.def
+	echo
+	IGCM_debug_Print 1 "ByPass_hgardfou_teta : ^teta*/2 in gcm.def"
+	echo
+	cat gcm.def
+	ByPass_hgardfou_teta=n
+    export lmdz_UserChoices_ByPass_hgardfou_teta=n
+	IGCM_card_WriteOption ${SUBMIT_DIR}/COMP/lmdz.card UserChoices ByPass_hgardfou_teta "${ByPass_hgardfou_teta}"
+    fi
+
+    ## Read ByPass_hgardfou_mats option in lmdz.card --> purmats=y 2 if [ $ByPass_hgardfou_mats = 1 ]
+    ByPass_hgardfou_mats=${lmdz_UserChoices_ByPass_hgardfou_mats}
+    if [ X"${ByPass_hgardfou_mats}" = X"y" ] ; then
+	sed -e "s/^purmats=.*/purmats=y/" gcm.def > gcm.def.tmp
+        IGCM_sys_Mv gcm.def.tmp gcm.def
+        echo
+        IGCM_debug_Print 1 "ByPass_hgardfou_mats : purmats=y in gcm.def"
+        echo
+        cat gcm.def
+        ByPass_hgardfou_mats=n
+        export lmdz_UserChoices_ByPass_hgardfou_mats=n
+        IGCM_card_WriteOption ${SUBMIT_DIR}/COMP/lmdz.card UserChoices ByPass_hgardfou_mats "${ByPass_hgardfou_mats}"
+    fi
+
+    # Add include of LMDZ context in iodef.xml
+    # In iodef.xml add on the next line after "COMPONENT CONTEXT"
+    echo '<context id="LMDZ" src="./context_lmdz.xml"/>' > add.tmp
+    # Add inclusion of file context_input_lmdz.xml if this file exists
+    if [ -f context_input_lmdz.xml ] ; then
+        echo '<context id="LMDZ" src="./context_input_lmdz.xml"/>' >> add.tmp
+    fi
+    # Include xml files for output configuration if running with workflow CMIP6
+    if ( [ X"$( echo ${config_UserChoices_ExpType} | grep CMIP6 )" != "X" ] || [ X${config_Post_dr2xmlIPSL} = XTRUE ] ) ; then
+	echo '<context id="LMDZ" src="./ping_lmdz.xml"/>' >> add.tmp
+    echo '<context id="LMDZ" src="./dr2xml_lmdz.xml"/>' >> add.tmp
+    fi
+    cp iodef.xml iodef.xml.tmp
+    sed -e "/COMPONENT CONTEXT/r add.tmp" iodef.xml.tmp > iodef.xml
+    rm iodef.xml.tmp add.tmp
+
+    #Long Name as global attribute (if LongName is not empty)
+    if [ ! "X${config_UserChoices_LongName}" = "X" ] ; then
+	listfile=$(ls file_def*lmdz.xml)
+	echo "<variable id=\"LongName\" type=\"string\">${config_UserChoices_LongName}</variable>" > add.tmp
+	for file in ${listfile}
+	do
+	    cp ${file} ${file}.tmp
+	    sed -e "/<file id/r add.tmp" \
+		${file}.tmp > ${file}
+	    rm ${file}.tmp 
+	done
+	rm add.tmp
+    fi
+
+    # Compression level (if CompressionLevel is not empty)
+    if [ ! "X${config_UserChoices_CompressionLevel}" = "X" ] ; then
+    echo "NetCDF output files compression level is " ${config_UserChoices_CompressionLevel}
+    listfile=$(ls file_def*lmdz.xml)
+    for file in ${listfile} ; do
+        sed -i -e "s/\(compression_level=\"\)[^\"]*\(\"\)/\1${config_UserChoices_CompressionLevel}\2/" ${file}
+    done
+    fi
+
+            
+    IGCM_debug_PopStack "ATM_Update"
+}
+
+#-----------------------------------
+function ATM_Finalize
+{
+    IGCM_debug_PushStack "ATM_Finalize"
+
+    IGCM_debug_Print 1 "FINALIZE ATM !"
+
+    IGCM_debug_PopStack "ATM_Finalize"
+}
+

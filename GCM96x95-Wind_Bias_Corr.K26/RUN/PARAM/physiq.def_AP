@@ -1,0 +1,95 @@
+## $Id$
+#
+##  Choix ou non  de  New oliq               
+new_oliq=y
+##  Orodr  ou  non   pour l orographie              
+ok_orodr=y
+##  Orolf  ou  non   pour l orographie              
+ok_orolf=y
+##   Si = .T. ,  lecture du fichier limit avec la bonne annee             
+ok_limitvrai=n
+##  Flag  pour la convection : 1 pour LMD, 2 pour Tiedtke, 3 KE(nvlle version JYG), 30 KE(version IPCC AR4), 4 KE vect
+iflag_con=30
+## Facteur multiplication des precip convectives dans KE
+cvl_corr=1.0
+#
+#
+
+### niveau du diagnostique de conservation d energie
+if_ebil=0
+#
+# parametres KE
+#
+### epmax = Efficacite precipitation maximale
+epmax = .999
+### ok_adj_ema = ?? pas utilise
+ok_adj_ema = n
+### iflag_clw Flag calcul eau liquide
+# - iflag_clw=0 : qcond_incld(i,l) = em_qcondc(l)
+# - iflag_clw=1 : qcond_incld(i,l) = em_qcond(l)
+# - iflag_clw=2 : eau liquide diagnostique en fonction de la Precip
+iflag_clw = 1
+# 
+# parametres nuages
+#
+### cld_lc_lsc  contenu en eau liquide des nuages large-scale (fisrtilp) 
+cld_lc_lsc = 4.16e-4
+### cld_lc_con  contenu en eau liquide des nuages convectifs (fisrtilp) 
+cld_lc_con = 4.16e-4
+### cld_tau_lsc cte de temps utilisee pour eliminer l eau large-scale (fisrtilp) 
+cld_tau_lsc = 1800.
+### cld_tau_con cte de temps utilisee pour eliminer l eau convective (fisrtilp) 
+cld_tau_con = 1800.
+### ffallv_lsc  cte utilisee dans calcul vitesse de chute cristaux de glace large-scale (fisrtilp) 
+ffallv_lsc = 0.5
+### ffallv_lsc  cte utilisee dans calcul vitesse de chute cristaux de glace convectifs (fisrtilp) 
+ffallv_con = 0.5
+### coef_eva coef evaporation precips eau/glace (fisrtilp/fisrtilp_tr?/conlmd?)
+coef_eva = 2.e-5
+### reevap_ice  reevaporation de toute la precip dans la couche du dessous pour la glace (fisrtilp) 
+reevap_ice = y
+### iflag_cldcon  flag pour calculer ratqsc=F(ratqsbas,fact_cldcon,q_seri) (physiq) 
+# - iflag_cldcon<=-1 diag. rain_Tiedtke 
+# - iflag_cldcon=1, ratqsc=ratqsbas+fact_cldcon*(q_seri(1)-q_seri(k))/q_seri(k)
+# - iflag_cldcon=1/2, ratqs=max(ratqs,ratqsc)
+# - iflag_cldcon=3,   ratqs=ratqss
+iflag_cldcon = 3
+### iflag_pdf :  flag calcul distribution sous-maille de l eau et des nuages 
+# - iflag_pdf=0, version ratqs, 
+# - iflag_pdf=1, calcul eau condensee, fraction nuageuse, eau nuageuse a partir
+# -              des PDFS de Sandrine Bony 
+iflag_pdf = 1
+### fact_cldcon  constante calcul ratqsc (voir iflag_cldcon) et proprietes nuages convectifs, clwcon0 (physiq.F) 
+fact_cldcon = 1.
+### facttemps=   facteur de relaxation de ratqs (iflag_cldcon=1/2) et rnebcon (iflag_cldcon=3)
+facttemps = 0.
+## ok_newmicro   =y appel newmicro , =n appel nuage (calcul epaisseur optique et emmissivite des nuages) 
+ok_newmicro = y
+### iflag_ratqs=0 correspond a la version IPCC AR4 
+iflag_ratqs=0
+### ratqsbas     ratqs en bas si iflag_cldcon=1 
+ratqsbas = 0.005
+### ratqshaut    ratqs en haut pour ratqss "stables"  
+ratqshaut = 0.33
+### rad_froid    rayon cristaux des nuages de glace "froids" 
+rad_froid = 35
+### rad_chau1    rayon goutelettes d eau chauds", en haut: k=4-klev 
+rad_chau1=12
+### rad_chau2    rayon goutelettes d eau chauds", en bas: k=1-3  
+rad_chau2=11
+# 
+# Coefficient et parametres sur les drags
+#
+f_cdrag_ter=1.
+f_cdrag_stable=1.
+f_cdrag_oce=0.8
+f_rugoro=0.
+### ksta_ter      coef.diffusion minimale sur terre/sic/lic 
+ksta_ter=1.e-7
+### cdmmax =     cdrag maximum pour le moment
+cdmmax = 2.5E-3
+### cdhmax =     cdrag maximum pour l energie
+cdhmax = 2.0E-3
+
+### nsplit_phys (D=1) 
+nsplit_phys=1

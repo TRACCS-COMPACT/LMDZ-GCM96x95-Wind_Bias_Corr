@@ -1,0 +1,282 @@
+#
+# $Id: physiq.def_NPv6.0.10 2846 2017-04-11 14:05:05Z musat $
+#
+##############################################################################
+# PARAMETRES ET CLES DE LA PHYSIQUE LMDZ
+##############################################################################
+# D: Valeur par default
+#
+#Parametres Orographiques et cdrags
+#**********************************
+##   Si=.T. ,  lecture du fichier limit avec la bonne annee 
+ok_limitvrai=n
+iflag_albedo=1
+#Cdrags 
+f_cdrag_stable=1.
+f_cdrag_ter=1.
+
+#parameter for Z0
+f_cdrag_oce=0.9
+iflag_z0_oce=1
+f_z0qh_oce=1.55
+min_wind_speed=0.1
+
+f_ri_cd_min=0.1
+#cdmmax
+cdmmax=2.5E-3
+#cdhmax
+cdhmax=2.0E-3
+##  Orodr  ou  non   pour l orographie
+ok_orodr=y
+##  Orolf  ou  non   pour l orographie              
+ok_orolf=y
+#Rugoro
+f_rugoro=0.
+#
+### Random gravity waves
+#Activitate the stochastic parameterization of convective GWs (should be equal to ok_strato)
+ok_gwd_rando=y
+# Scale the momentum fluxes due to convective GWs
+gwd_rando_ruwmax=0.23
+#Scale the saturated momentum flux of  convective GWs 
+gwd_rando_sat=0.60
+#
+gwd_front_ruwmax = 4.00
+sso_gfrcri=0.70
+sso_gkdrag=0.6
+sso_gkwake=1.0
+sso_gklift=0.1
+#
+# Rayonnement
+#*********************
+# activation du nouveau code de rayonnement RRTM
+# 0 : Ancien code et 1 : RRTM (D=0)
+iflag_rrtm=1
+NSW=6
+#
+# Parametres nuages
+#******************
+#seuils de la precipitation des nuages strateformes (D: 2.6e-4 2.6e-4)
+cld_lc_lsc=0.00011
+cld_lc_con=0.00011
+#constante de temps pour eleminer eau lsc et convective (D: 3600. 3600.)
+cld_tau_lsc=900.
+cld_tau_con=900.
+#facteurs correctifs sur la vitesse de chute des cristaux de glace (D: 1 1)
+ffallv_lsc=1.
+ffallv_con=1.
+#coefficient sur la reevaporation de la pluie (D: 2.e-5 n)
+coef_eva=4.5e-5
+reevap_ice=y
+#calcul des proprietes des nuages convectifs (D:1 0.375 1.e-4) 
+iflag_cldcon=6
+fact_cldcon=1.
+facttemps=0.
+#calcul eau condensee et fraction nuageuse a partir des PDF (D:0, 0:version avec ratqs sinon nouvelles PDFs)  
+iflag_pdf=1
+#calcul epaisseur optique et emmissivite des nuages (D: y 1 0.01 0.3)
+ok_newmicro=y
+iflag_ratqs=4
+ratqsp0=45000.
+ratqsdp=20000.
+ratqsbas=0.002
+ratqshaut=0.4
+#rayon effectif pour les nuages de glace (D:35)
+rad_froid=35
+#rayons effectifs pour les nuages eau liq (tailles des gouttes d eau nuageuse, D: 13 9)
+rad_chau1=12
+rad_chau2=11
+##  Choix ou non  de  New oliq               
+new_oliq=y
+# Seuils oliqmax, oicemax
+oliqmax=1.5E-3
+oicemax=1.5E-3
+#Rayons min et max effectifs des particules des nuages
+rei_min=16.
+rei_max=61.29
+#
+# Flags Convection 
+#*****************
+#Convection scheme switch (D:2, 1:LMD, 2:Tiedtke, 3:KE New Physics, 30:KE AR4)
+iflag_con=3
+#output level of energy conservation diagnostics
+if_ebil=0
+#maximum efficiency of cld water->precipitation conversion (D: 0.993)
+epmax=0.997
+#dry convective adjustment at beginning of Emanuel convective scheme (D: n 0)
+ok_adj_ema=n
+iflag_clw=0
+#Convective closure (D:1, 0:AR4, 2:ALE and ALP)
+iflag_clos=2
+#Convective entrainment mixing law (D:1, 0:AR4=flat PDF, 1=PDF)
+iflag_mix=1
+#weights of the bell shaped and flat PDF (used only if iflag_mix=1) (D: 1 0)
+qqa1=1.
+qqa2=0.
+#Parameters of the bell shaped PDF; Fmax=center (D= 0.65), Gammas=width (D=0.05)
+cvl_corr=1.0
+#Multiplicative factor of Emanuel convective scheme precipitation (D: 1.)
+Fmax=0.65
+#
+t_top_max=275.
+#
+# Flags Couche limite
+#********************
+#shema de CL des thermiques (D:0, 0:ajustement sec,=>1:versions thermiques) 
+iflag_thermals=18
+#pas de temps du spliting pour les thermiques
+nsplit_thermals=1
+tau_thermals=0.
+iflag_thermals_ed=8
+fact_thermals_ed_dz=0.08
+iflag_thermals_optflux=0
+#shema de la couche de surface (D:1, 1:LMD, 8:Mellor-Yamada) 
+iflag_pbl=11
+#diffusion turbulente
+ksta_ter=1.e-7
+ksta=1.e-10
+#ok_kzmin : calcul Kzmin dans la CL de surface
+ok_kzmin=y
+#couplage ou non avec la convection
+iflag_coupl=5 (0:AR4 et 1:nouvelle physique)
+seuil_inversion=-0.08
+#rendement sur la puissance fournie par les thermiques a la convection
+alp_bl_k=0.5
+#
+## temperature dependency of qsat for iterative procedure
+## temporary flag to switch between the old (CMIP5, D=0) and new versions (=1) versions 
+iflag_fisrtilp_qsat=4 
+## Reactivation du calcul d un zmax continu pour les thermiques
+## reactivation d une fermeture humide des thermiques  iflag_thermals_closure=2 (D=1)
+iflag_thermals_closure=1
+#
+# Flags wakes
+#************
+#Wake scheme switch (D:0, 0:AR4, 1:New Physics)
+iflag_wake=1
+#Constant value to be added to Alp (D: 0.)
+alp_offset=0.
+
+### nrlmd le 10/04/2012: Declenchement ###
+#Declenchement par couche-limite (0: deterministe, 1: stochastique)
+iflag_trig_bl=1
+#Surface critique au LCL
+s_trig=1.2e7
+#Temps de decorrelation entre scenes de cumulus
+tau_trig_shallow=1200
+#Temps de decorrelation entre scenes de cumulonimbus
+tau_trig_deep=1200
+# Pour la stabilisation
+random_notrig_max=0.99
+ok_adjwk=y
+tmax_fonte_cv=278.15
+#
+flag_wk_check_trgl=y
+#
+cv_flag_feed=2
+
+### nrlmd le 10/04/2012: Fermeture ###
+#Fermeture par couche-limite (0: deterministe, 1: statistique, 2: statistique+convergence grande echelle)
+iflag_clos_bl=1
+### fin nrlmd le 10/04/2012
+
+## Modification de la plage de temperature pour la phase mixte liquide/glace des nuages
+## Controle par les t_glace_min/max, exposant_glace, iflag_t_glace (D=0)
+t_glace_min=243.15
+t_glace_max=273.15
+exposant_glace=2.
+iflag_t_glace=2
+iflag_ice_thermo=1
+
+#
+## The source terms of the TKE prognostic equation are diagnosed from tendencies (du, dv, dT) 
+## associated with subrgrid scaleamotions and treated as an additional heat source.
+## Controled by a key, iflag_ener_conserv (D=-1):
+## 0 : no conservation, -1 : old adhoc correction for kinetic E only (used for CMIP5) 
+## 1 : conservation, 101 : conversion from kinetic to heat only, 110 conversion from potential to heat only
+iflag_ener_conserv=1
+
+#Activation of corrections for water conservation (D: n). 
+##The default is n for compatibility with earlier versions.
+##generally it should be y.
+ok_conserv_q=y 
+
+iflag_cloudth_vert=3
+
+#
+lmixmin=10.
+#pbl_lmixmin_alpha=0.05
+
+#Bergeron
+iflag_bergeron=2
+
+
+### Convection
+#altitude, in hPa, above LCL at which buoybase is computed, def = original: -40
+dpbase=-40.
+#altitude, in hPa, above LCL below which Ep=0, def = original: 150, used only if flag_epKEorig=0
+pbcrit=150.0
+#altitude, in hPa, above LCL above which Ep=Epmax, def = original: 500, used only if flag_epKEorig=0
+ptcrit=500.0
+#reference fractional area of precipitating downdraughts, def = original: 0.01
+sigdz=0.01
+#unsaturated fraction of precipitating downdraughts, def = original: 0.15
+spfac=0.15
+#relaxation time of cloud base mass flux, def = original: 8000
+tau=8000.
+#flag for wb (= vert velocity at LFC); 0->wb=wbmax, 1->wb=f(plfc) bounded, 2->wb=f(plfc) linear, def = 1
+flag_wb=1
+#parameter used in the computation of wb, def = 6.
+wbmax=6.
+#
+ok_convstop=.False.
+#
+tau_stop=15000.
+#
+ok_intermittent=.False.
+# nouvel epluchage de C.Rio
+iflag_mix_adiab=0
+#shedding coefficient (used when iflag_mix_adiab=1)
+coef_peel=0.25
+#
+### Clouds
+#Conversion cld water->precip: Ep=f(pressure) if 0; Ep=f(temperature) if 1, def=1
+flag_epKEorig=1
+#max condensed water concentration in kg/kg, def=0.0003, original: 0.0011, used only if flag_epKEorig=1
+elcrit=0.00025
+#temperature in degre Celsius, at which Ep=Epmax, def=-55., original: -55, used only if flag_epKEorig=1
+tlcrit=-40.
+
+### Wakes
+#coefficient in Wape->C_star formula: C_star=stark*sqrt(2*Wape), def: 0.33
+stark=0.33
+#lifting efficiency of wakes; Alp=Alpk*Fip, Fip=power provided by wakes, def: 0.25
+alpk=0.25
+#wake density = number of wake centers per m2, def: 8.E-12
+#wdens_ref=8.E-12
+wdens_ref_o=1.e-9
+wdens_ref_l=8.e-12
+#
+#multiplicative factor of the damping by gravity waves, def: 4.
+coefgw=4.
+#
+alb_vis_sno_lic=0.96
+alb_nir_sno_lic=0.68
+inertie_sno=350.
+
+nbapp_cv=48
+
+# Prevent some crashes
+# Filter out bad wakes
+flag_wk_check_trgl=y
+# Check whether parcel level temperature and specific humidity
+# are reasonable and demand that LCL be high enough
+cv_flag_feed=2
+
+# Correction bug for thermodynamical constants passed to rrtm
+ok_bad_ecmwf_thermo=n
+# Check for energy conservation
+fl_cor_ebil=1
+
+# save 20% CPU 
+ok_optim_yield=y

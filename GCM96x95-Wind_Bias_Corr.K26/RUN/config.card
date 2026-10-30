@@ -1,0 +1,158 @@
+# $Id$
+#========================================================================
+#D-- Compatibility -
+[Compatibility]
+libIGCM=1.0
+#D-- UserChoices -
+[UserChoices]
+#============================
+JobName=R242_PYC
+#----- Short Name of Experiment
+ExperimentName=amip
+#----- TEST DEVT PROD
+SpaceName=TEST
+LongName="LMDZOR configuration"
+TagName=LMDZOR
+#D- Choice of experiment in EXPERIEMENTS directory
+ExpType=LMDZOR/amip
+#============================
+#-- leap, noleap, 360d
+CalendarType=leap
+#-- Begin and end of job 
+#-- "YYYY-MM-DD"
+DateBegin=2016-01-01
+DateEnd=2016-12-31
+#DateEnd=2020-12-31
+#============================
+#-- 1Y, 1M, 5D, 1D Period Length for one execution
+PeriodLength=1Y
+#============================
+#-- Compression level for netcdf output files
+CompressionLevel=2
+#============================
+#-- Source following file with module settings, only if it exists
+EnvFile=${SUBMIT_DIR}/../ARCH/arch.env
+#============================
+#-- ResolAtm indicates the atmospheric resolution
+#   This variable is used in the executable name 
+ResolAtm=96x95x79
+#============================
+# OptMode indicates the optimization mode choosen during compilation
+# This variable is used in the executable name
+OptMode=prod
+
+#========================================================================
+#D-- ListOfComponents -
+[ListOfComponents]
+#D- For each component, Name of component, Tag of component
+ATM= (lmdz, LMDZ)
+SRF= (orchidee, ORCHIDEE)
+SBG= (stomate, ORCHIDEE)
+IOS= (xios, XIOS)
+PYC= (eophis, EOPHIS)
+
+#========================================================================
+#D-- Executable -
+[Executable]
+#D- For each component: First argument is the executable name as in bin folder.
+#D  ResolAtm and OptMode are set in UserChoices section.
+#D- Here is set 71MPI*8OMP which is suitable for resolution 144x142x79
+#D- Change to 31MPI*4OMP for resolution 96x95x39
+ATM= (gcm_${ResolAtm}_${OptMode}_couple.e, lmdz.x, 31MPI, 1OMP)
+SRF= ("", "")
+SBG= ("", "")
+IOS= (xios_server_${OptMode}_oasis.exe, xios.x, 1MPI)
+PYC= (eophis_wind_bc.py, eophis_main.py, 1MPI)
+
+#========================================================================
+#D-- Restarts -
+[Restarts]
+#D- by default: config.card describes no restart for all components 
+#D-             ie start from Levitus or limit files
+#D- If you want to restart all components from the same simulation,
+#D-      put OveRule flag to 'y' and set the next 3 parameters
+OverRule=n
+#D- Last day of the experience used as restart for all components
+RestartDate=2000-12-31
+#D- Define restart simulation name for all components
+RestartJobName=R200
+#D- Path Server Group Login
+RestartPath=/ccc/store/cont003/gencmip6/p25krin/IGCM_OUT/LMDZOR/TEST/amip/
+
+#========================================================================
+#D-- ATM -
+[ATM]
+# If config_Restarts_OverRule == 'n' next 4 params are read
+Restart= n
+# Last day of the experience used as restart for this component if Restart=y
+RestartDate=2319-12-31
+#D- Define restart simulation name for this component
+RestartJobName=CM607-LR-pdCtrl-01
+#D- Path Server Group Login
+RestartPath=${R_IN}/RESTART/IPSLCM6/DEVT/pdControl
+
+#========================================================================
+#D-- SRF -
+[SRF]
+# If config_Restarts_OverRule == 'n' next 4 params are read
+Restart= n
+# Last day of the experience used as restart for this component if Restart=y
+RestartDate=2319-12-31
+#D- Define restart simulation name for this component
+RestartJobName=CM607-LR-pdCtrl-01
+#D- Path Server Group Login
+RestartPath=${R_IN}/RESTART/IPSLCM6/DEVT/pdControl
+
+#========================================================================
+#D-- SBG - STOMATE
+[SBG]
+# If config_Restarts_OverRule == 'n' next 4 params are read
+Restart= n
+# Last day of the experience used as restart for this component if Restart=y
+RestartDate=2319-12-31
+#D- Define restart simulation name for this component
+RestartJobName=CM607-LR-pdCtrl-01
+#D- Path Server Group Login
+RestartPath=${R_IN}/RESTART/IPSLCM6/DEVT/pdControl
+
+#========================================================================
+#D-- IOS -
+[IOS]
+# If config_Restarts_OverRule == 'n' next 4 params are read
+Restart= n
+##-- Last day of the experience used as restart for this component if Restart=y
+RestartDate=
+# Define restart simulation name for this component
+RestartJobName=
+RestartPath=
+
+#========================================================================
+#D-- PYC -
+[PYC]
+# If config_Restarts_OverRule == 'n' next 4 params are read
+Restart= n
+##-- Last day of the experience used as restart for this component if Restart=y
+RestartDate=
+# Define restart simulation name for this component
+RestartJobName=
+RestartPath=
+
+#========================================================================
+#D-- Post -
+[Post]
+#D- PackFrequency determines the frequency of pack submission
+PackFrequency=10Y
+#D- TimeSeriesFreqency determines the frequency of post-processing submission
+#D- Set NONE to deactivate the creation of all time series 
+TimeSeriesFrequency=10Y
+#D- SeasonalFrequency determines the length for each seasonal average
+#D- Set NONE to deactivate the creation of all seasonal avereage
+SeasonalFrequency=10Y
+#D- Offset for seasonal average first start dates ; same unit as SeasonalFrequency
+#D- Usefull if you do not want to consider the first X simulation's years
+SeasonalFrequencyOffset=0
+#D- If you want to produce compute PCMDI metrics from seasonal average
+#D- Set TRUE or FALSE to activate/deactivate the metrics computation.
+MetricsPCMDI=FALSE
+
+#========================================================================
