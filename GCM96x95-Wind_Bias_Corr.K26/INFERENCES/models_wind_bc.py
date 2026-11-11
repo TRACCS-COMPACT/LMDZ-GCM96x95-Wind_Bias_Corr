@@ -1,7 +1,7 @@
 import torch
 import numpy as np
 from pathlib import Path
-from unet3d_inference import UNet3D
+from unet3d import UNet3D
 
 
 # ++++++++++++++++++++++++++++ #
