@@ -1,0 +1,38 @@
+# common
+LOCAL_LIB=/ccc/work/cont003/gen1523/bargexis/modipsl/modeles
+
+# Ugly hack for orchidee <=2.0
+NETCDF_INCDIR="-I$NETCDFC_ROOT -I$NETCDFFORTRAN_ROOT/include"
+NETCDF_LIBDIR="-L$NETCDFC_ROOT/lib -Wl,-rpath,$NETCDFC_ROOT/lib -L$NETCDFFORTRAN_ROOT/lib -Wl,-rpath,$NETCDFFORTRAN_ROOT/lib"
+NETCDF_LIB="-lnetcdff -lnetcdf -lhdf5_hl -lhdf5 -L/usr/lib -lz"
+NETCDF95_INCDIR="-I$NETCDFFORTRAN_ROOT/include"
+NETCDF95_LIBDIR="-L$NETCDFFORTRAN_ROOT/lib -Wl,-rpath,$NETCDFFORTRAN_ROOT/lib"
+NETCDF95_LIB="-lnetcdff"
+
+# Exported
+IOIPSL_INCDIR="-I$(pwd)/../IOIPSL/inc"
+IOIPSL_LIBDIR="-L$(pwd)/../IOIPSL/lib"
+IOIPSL_LIB="-lioipsl"
+
+# Exported
+XIOS_HOME=$LOCAL_LIB/XIOS_OASIS
+XIOS_INCDIR="-I$XIOS_HOME/inc"
+XIOS_LIBDIR="-L$XIOS_HOME/lib"
+XIOS_LIB="-lxios -lstdc++"
+
+# Exported
+OASIS_HOME=$LOCAL_LIB/oasis3-mct/BLD
+OASIS_INCDIR="-I$OASIS_HOME/include"
+OASIS_LIBDIR="-L$OASIS_HOME/lib"
+OASIS_LIB="-loasis.cbind -lpsmile.MPI1 -lscrip -lmct -lmpeu"
+
+HDF5_INC_DIR=$HDF5_ROOT/include
+HDF5_LIB_DIR=$HDF5_ROOT/lib
+HDF5_INCDIR="-I$HDF5_INC_DIR"
+HDF5_LIBDIR="-L$HDF5_LIB_DIR"
+HDF5_LIB="-lhdf5_hl -lhdf5 -lz"
+
+# Exported
+ORCH_HOME=$LOCAL_LIB/ORCHIDEE_OASIS
+ORCH_INCDIR="-I$ORCH_HOME/inc"
+ORCH_LIBDIR="-L$ORCH_HOME/ORCHIDEE/lib"
