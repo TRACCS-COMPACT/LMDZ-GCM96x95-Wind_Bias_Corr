@@ -36,7 +36,7 @@ Purpose of the experiment is to compute the winds bias correction on a realistic
 - Eophis version : [v1.1.0](https://github.com/alexis-barge/eophis/tree/v1.1.0)
 - **K26** dependencies:
   ```bash
-  git clone https://gitlab.in2p3.fr/ipsl/espri/espri-ia/projects/lmdz_wind_bc.git GCM96x95-Wind_Bias_Corr.K26/INFERENCES/lmdz_wind_bc
+  git clone https://gitlab.in2p3.fr/ipsl/espri/espri-ia/projects/lmdz_wind_bc.git LMDZ-GCM96x95-Wind_Bias_Corr/GCM96x95-Wind_Bias_Corr.K26/INFERENCES/lmdz_wind_bc
   cd LMDZ-GCM96x95-Wind_Bias_Corr/GCM96x95-Wind_Bias_Corr.K26/INFERENCES/lmdz_wind_bc
   git checkout dccf81fdb0a210f93dfa58ea880ebf464352d1ed
   pip install -e .
