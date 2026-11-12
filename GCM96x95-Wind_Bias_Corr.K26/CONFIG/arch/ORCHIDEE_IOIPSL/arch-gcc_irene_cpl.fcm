@@ -8,7 +8,7 @@
 %FPP_FLAGS           -P -traditional
 %FPP_DEF             NC_DOUBLE
 
-%BASE_FFLAGS         -ffree-line-length-0 -fdefault-real-8 -fallow-argument-mismatch -fimplicit-none
+%BASE_FFLAGS         -ffree-line-length-0 -fdefault-real-8 -fallow-argument-mismatch -fimplicit-none -I$HDF5_ROOT/include -I${OASIS_HOME}/include
 %PROD_FFLAGS         -O3 -march=native -fPIC
 %DEV_FFLAGS          -Wall -fbounds-check
 %DEBUG_FFLAGS        -g3 -Wall -fbounds-check -ffpe-trap=invalid,zero,overflow -O0 -fstack-protector-all -fbacktrace -finit-real=snan
@@ -16,7 +16,7 @@
 %MPI_FFLAGS          -fcray-pointer
 
 # /!\ LD must be written in Makefile syntax
-%BASE_LD             -Wl,-rpath=$(shell nf-config --prefix)/lib
+%BASE_LD             -Wl,-rpath=$(shell nf-config --prefix)/lib -L$HDF5_ROOT/lib -L{OASIS_HOME}/lib -lmct -lmpeu -loasis.cbind -lpsmile.MPI1 -lscrip -lhdf5 -lhdf5_hl
 %MPI_LD              -L$OPENMPI_ROOT/lib -lmpi
 %OMP_LD              -fopenmp
 %OMP_FFLAGS          -fopenmp -fcray-pointer
