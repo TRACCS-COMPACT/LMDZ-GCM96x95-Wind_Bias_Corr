@@ -1,1 +1,1 @@
- ./makeioipsl_fcm -j 8 -arch local-gfortran-parallel -prod
+ ./makeioipsl_fcm -j 8 -arch gcc_irene_cpl -prod
