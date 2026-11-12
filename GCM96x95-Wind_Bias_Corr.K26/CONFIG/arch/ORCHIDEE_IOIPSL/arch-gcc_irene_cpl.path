@@ -21,7 +21,7 @@ XIOS_LIBDIR="-L$XIOS_HOME/lib"
 XIOS_LIB="-lxios -lstdc++"
 
 # Exported
-OASIS_HOME=$LOCAL_LIB/oasis3-mct/BLD
+export OASIS_HOME=$LOCAL_LIB/oasis3-mct/BLD
 OASIS_INCDIR="-I$OASIS_HOME/include"
 OASIS_LIBDIR="-L$OASIS_HOME/lib"
 OASIS_LIB="-loasis.cbind -lpsmile.MPI1 -lscrip -lmct -lmpeu"
